@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<robot name="eduard">
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <mesh filename="package://edu_robot_control/model/mesh/eduard-chassis.dae"/>
+      </geometry>
+    </visual>
+  </link>
+</robot>
