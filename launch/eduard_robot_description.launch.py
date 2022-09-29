@@ -23,12 +23,7 @@ def generate_launch_description():
         parameters=[{'robot_description': robot_description}]
     )
 
-    joint_state_publisher_gui_node = Node(
-        package='joint_state_publisher_gui',
-        executable='joint_state_publisher_gui',
-    )
 
     return LaunchDescription([
         robot_state_publisher_node,
-        # joint_state_publisher_gui_node
     ])
