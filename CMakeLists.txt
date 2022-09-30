@@ -10,8 +10,11 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
+find_package(edu_robot REQUIRED)
 
-add_executable(remote_control src/remote_control.cpp)
+add_executable(remote_control
+  src/remote_control.cpp
+)
 target_include_directories(remote_control PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
@@ -21,6 +24,7 @@ ament_target_dependencies(
   "rclcpp"
   "sensor_msgs"
   "geometry_msgs"
+  "edu_robot"
 )
 
 install(
