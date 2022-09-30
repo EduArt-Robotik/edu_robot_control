@@ -18,8 +18,8 @@
 namespace eduart {
 
 constexpr std::array<ButtonInterpreter, 2u> unassigned_buttons = {
-  ButtonInterpreter(Command::Disable, "disable", 9u),
-  ButtonInterpreter(Command::Enable, "enable", 10u)
+  ButtonInterpreter(Command::Disable, "disable", 8u),
+  ButtonInterpreter(Command::Enable, "enable", 9u)
 };
 
 constexpr std::array<AxisInterpreter, 4u> unassigned_joy_axis = {
@@ -121,19 +121,19 @@ void RemoteControl::callbackJoy(std::shared_ptr<const sensor_msgs::msg::Joy> msg
     switch (axis.second.command()) {
       case Command::Forward: 
         // expect axis values between 0 and 1, however it is ensured that the max speed is not exceeded.
-        twist_cmd.linear.x = std::max(_parameter.max_linear_velocity,
+        twist_cmd.linear.x = std::min(_parameter.max_linear_velocity,
                                       msg->axes[axis.first] * _parameter.max_linear_velocity);
         break;
 
       case Command::Left:
         // expect axis values between 0 and 1, however it is ensured that the max speed is not exceeded.
-        twist_cmd.linear.y = std::max(_parameter.max_linear_velocity,
+        twist_cmd.linear.y = std::min(_parameter.max_linear_velocity,
                                       msg->axes[axis.first] * _parameter.max_linear_velocity);      
         break;
 
       case Command::Turn:
         // expect axis values between 0 and 1, however it is ensured that the max speed is not exceeded.
-        twist_cmd.angular.z = std::max(_parameter.max_angular_velocity,
+        twist_cmd.angular.z = std::min(_parameter.max_angular_velocity,
                                        msg->axes[axis.first] * _parameter.max_angular_velocity);
         break;
 
@@ -147,11 +147,14 @@ void RemoteControl::callbackJoy(std::shared_ptr<const sensor_msgs::msg::Joy> msg
   }
 
   // Buttons
-  for (const auto& button : _button_mapping) {
+  for (auto& button : _button_mapping) {
     if (button.first >= msg->buttons.size()) {
       RCLCPP_FATAL_STREAM(get_logger(), "Configuration error. Button \"" << button.second.parameterName() << "\" got index = "
                                         << button.first << " which is out of range of received joy message.");
       throw std::runtime_error("Out of range index in ButtonInterpreter.");        
+    }
+    if (false == button.second.hasJustBeenPressed(msg->buttons[button.first])) {
+      continue;
     }
 
     switch (button.second.command()) {
@@ -161,6 +164,7 @@ void RemoteControl::callbackJoy(std::shared_ptr<const sensor_msgs::msg::Joy> msg
         auto request = std::make_shared<edu_robot::srv::SetMode::Request>();
         request->mode.value = edu_robot::msg::Mode::INACTIVE;
 
+        RCLCPP_INFO(get_logger(), "Send set mode request mode = INACTIVE.");
         _client_set_mode->async_send_request(request, [logger = get_logger()](ResponseFuture future) {
           auto request = future.get().first;
           auto response = future.get().second;
@@ -180,6 +184,7 @@ void RemoteControl::callbackJoy(std::shared_ptr<const sensor_msgs::msg::Joy> msg
         auto request = std::make_shared<edu_robot::srv::SetMode::Request>();
         request->mode.value = edu_robot::msg::Mode::REMOTE_CONTROLLED;
 
+        RCLCPP_INFO(get_logger(), "Send set mode request mode = REMOTE_CONTROLLED.");
         _client_set_mode->async_send_request(request, [logger = get_logger()](ResponseFuture future) {
           auto request = future.get().first;
           auto response = future.get().second;
