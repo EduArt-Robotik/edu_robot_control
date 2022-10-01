@@ -89,7 +89,7 @@ RemoteControl::RemoteControl() : rclcpp::Node("remote_control")
   declare_parameter<float>("max_linear_velocity", _parameter.max_linear_velocity);
   _parameter.max_linear_velocity = get_parameter("max_linear_velocity").as_double();
   declare_parameter<float>("max_angular_velocity", _parameter.max_angular_velocity);
-  _parameter.max_angular_velocity = get_parameter("max_angular_velocity", _parameter.max_angular_velocity);
+  _parameter.max_angular_velocity = get_parameter("max_angular_velocity").as_double();
 }
 
 RemoteControl::~RemoteControl()

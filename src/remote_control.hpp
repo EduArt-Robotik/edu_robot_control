@@ -85,7 +85,7 @@ class RemoteControl : public rclcpp::Node
 public:
   struct Parameter {
     float max_linear_velocity  = 1.0f;
-    float max_angular_velocity = 1.0f;
+    float max_angular_velocity = M_PI;
   };
 
   RemoteControl();
