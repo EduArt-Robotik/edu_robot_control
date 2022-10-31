@@ -6,7 +6,6 @@
 #pragma once
 
 #include <cstddef>
-#include <geometry_msgs/msg/detail/twist__struct.hpp>
 #include <rclcpp/node.hpp>
 #include <rclcpp/publisher.hpp>
 #include <rclcpp/subscription.hpp>
@@ -15,6 +14,7 @@
 #include <sensor_msgs/msg/joy.hpp>
 #include <geometry_msgs/msg/twist.hpp>
 
+#include <edu_robot/msg/set_lighting_color.hpp>
 #include <edu_robot/srv/set_mode.hpp>
 
 #include <memory>
@@ -30,6 +30,11 @@ enum class Command {
   Left,
   Turn,
   Throttle,
+  IndicateTurnLeft,
+  IndicateTurnRight,
+  IndicateWarning,
+  IndicateOperation,
+  IndicateParking,
 };
 
 class JoyInterpreter
@@ -58,17 +63,23 @@ public:
                               const std::size_t default_index = 0u)
     : JoyInterpreter(command, parameter_name, default_index)
     , _last_state(false)
+    , _current_state(false)
   { }
 
-  inline bool hasJustBeenPressed(const bool current_button_state) {
-    const bool local_last_state = _last_state;
-    _last_state = current_button_state;
-
-    return local_last_state == false && current_button_state == true;
+  inline void updateState(const bool current_button_state) {
+    _last_state = _current_state;
+    _current_state = current_button_state;
+  }
+  inline bool hasJustBeenPressed() {
+    return _last_state == false && _current_state == true;
+  }
+  inline bool hasJustBeenReleased() {
+    return _last_state == true && _current_state == false;
   }
 
 private:
   bool _last_state;
+  bool _current_state;
 };
 
 class AxisInterpreter : public JoyInterpreter
@@ -94,9 +105,18 @@ public:
 private:
   void callbackJoy(std::shared_ptr<const sensor_msgs::msg::Joy> msg);
 
+  struct function_binding {
+    struct {
+      std::function<void()> positive = nullptr;
+      std::function<void()> negative = nullptr;
+    } edge;
+  };
+
   std::shared_ptr<rclcpp::Subscription<sensor_msgs::msg::Joy>> _sub_joy;
   std::shared_ptr<rclcpp::Publisher<geometry_msgs::msg::Twist>> _pub_twist;
+  std::shared_ptr<rclcpp::Publisher<edu_robot::msg::SetLightingColor>> _pub_lighting;
   std::shared_ptr<rclcpp::Client<edu_robot::srv::SetMode>> _client_set_mode;
+  std::map<Command, function_binding> _command_binding;
 
   // Expect maximum 20 buttons and 20 axis...
   std::map<std::size_t, ButtonInterpreter> _button_mapping;
