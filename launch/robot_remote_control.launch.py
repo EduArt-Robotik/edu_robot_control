@@ -12,6 +12,11 @@ from launch_ros.parameter_descriptions import ParameterValue
 
 def generate_launch_description():
     package_path = get_package_share_path('edu_robot_control')
+    parameter_file = os.path.join(
+      package_path,
+      'parameter',
+      'remote_control.yaml'
+    )
 
     joy_node = Node(
       package='joy',
@@ -20,7 +25,8 @@ def generate_launch_description():
 
     remote_control_node = Node(
       package='edu_robot_control',
-      executable='remote_control'
+      executable='remote_control',
+      parameters= [parameter_file]
     )
 
     return LaunchDescription([

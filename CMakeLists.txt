@@ -37,6 +37,7 @@ install(
   DIRECTORY
     model
     launch
+    parameter
   DESTINATION share/${PROJECT_NAME}
 )
 
