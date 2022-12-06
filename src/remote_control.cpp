@@ -1,5 +1,6 @@
 #include "remote_control.hpp"
 
+#include <edu_robot/msg/detail/mode__struct.hpp>
 #include <rclcpp/executors.hpp>
 #include <rclcpp/logging.hpp>
 #include <rclcpp/node.hpp>
@@ -20,6 +21,36 @@ namespace control_function {
 
 using ResponseFuture = rclcpp::Client<edu_robot::srv::SetMode>::SharedFutureWithRequest;
 
+std::string get_mode_string(const edu_robot::msg::Mode mode)
+{
+  std::string mode_string;
+
+  if (mode.value & edu_robot::msg::Mode::INACTIVE) {
+    mode_string += "INACTIVE|";
+  }
+  if (mode.value & edu_robot::msg::Mode::REMOTE_CONTROLLED) {
+    mode_string += "REMOTE CONTROLLED|";
+  }
+  if (mode.value & edu_robot::msg::Mode::FLEET_MASTER) {
+    mode_string += "FLEET_MASTER|";
+  }
+  if (mode.value & edu_robot::msg::Mode::FLEET_SLAVE) {
+    mode_string += "FLEET_SLAVE|";
+  }
+  if (mode.value & edu_robot::msg::Mode::SKID_DRIVE) {
+    mode_string += "SKID_DRIVE|";
+  }
+  if (mode.value & edu_robot::msg::Mode::MECANUM_DRIVE) {
+    mode_string += "MECANUM_DRIVE|";
+  }
+
+  if (mode_string.empty() == false) {
+    mode_string.pop_back();
+  }
+
+  return mode_string;
+}
+
 void disable(rclcpp::Node& node, rclcpp::Client<edu_robot::srv::SetMode>& service_client)
 {
   auto request = std::make_shared<edu_robot::srv::SetMode::Request>();
@@ -33,11 +64,12 @@ void disable(rclcpp::Node& node, rclcpp::Client<edu_robot::srv::SetMode>& servic
       auto response = future.get().second;
 
       if (response->state.mode.value != request->mode.value) {
-        RCLCPP_ERROR_STREAM(logger, "Can't disable robot! Robot is in mode = " << response->state.mode.value);
+        RCLCPP_ERROR_STREAM(logger, "Can't disable robot! Robot is in mode = " << get_mode_string(response->state.mode));
         return;
       }
 
       RCLCPP_INFO(logger, "Set mode INACTIVE successfully.");
+      RCLCPP_INFO(logger, "Current mode of the robot is = %s", get_mode_string(response->state.mode).c_str());      
     }
   );
 }
@@ -55,13 +87,62 @@ void enable(rclcpp::Node& node, rclcpp::Client<edu_robot::srv::SetMode>& service
       auto response = future.get().second;
 
       if (response->state.mode.value != request->mode.value) {
-        RCLCPP_ERROR_STREAM(logger, "Can't disable robot! Robot is in mode = " << response->state.mode.value);
+        RCLCPP_ERROR_STREAM(logger, "Can't disable robot! Robot is in mode = " << get_mode_string(response->state.mode));
         return;
       }
 
       RCLCPP_INFO(logger, "Set mode REMOTE_CONTROLLED successfully.");
+      RCLCPP_INFO(logger, "Current mode of the robot is = %s", get_mode_string(response->state.mode).c_str());      
     }
   );
+}
+
+void switch_to_skid_kinematic(rclcpp::Node& node, rclcpp::Client<edu_robot::srv::SetMode>& service_client)
+{
+  auto request = std::make_shared<edu_robot::srv::SetMode::Request>();
+  request->mode.value = edu_robot::msg::Mode::SKID_DRIVE;
+
+  RCLCPP_INFO(node.get_logger(), "Switch to skid drive kinematic.");
+  service_client.async_send_request(
+    request,
+    [logger = node.get_logger()](ResponseFuture future) {
+      auto request = future.get().first;
+      auto response = future.get().second;
+
+      if (response->state.mode.value != request->mode.value) {
+        RCLCPP_ERROR_STREAM(logger, "Can't switch to skid drive kinematic! Robot is in mode = "
+                                    << get_mode_string(response->state.mode));
+        return;
+      }
+
+      RCLCPP_INFO(logger, "Switched to skid drive kinematic successfully.");
+      RCLCPP_INFO(logger, "Current mode of the robot is = %s", get_mode_string(response->state.mode).c_str());
+    }
+  );  
+}
+
+void switch_to_mecanum_kinematic(rclcpp::Node& node, rclcpp::Client<edu_robot::srv::SetMode>& service_client)
+{
+  auto request = std::make_shared<edu_robot::srv::SetMode::Request>();
+  request->mode.value = edu_robot::msg::Mode::MECANUM_DRIVE;
+
+  RCLCPP_INFO(node.get_logger(), "Switch to mecanum drive kinematic.");
+  service_client.async_send_request(
+    request,
+    [logger = node.get_logger()](ResponseFuture future) {
+      auto request = future.get().first;
+      auto response = future.get().second;
+
+      if (response->state.mode.value != request->mode.value) {
+        RCLCPP_ERROR_STREAM(logger, "Can't switch to mecanum drive kinematic! Robot is in mode = "
+                                    << get_mode_string(response->state.mode));
+        return;
+      }
+
+      RCLCPP_INFO(logger, "Switched to mecanum drive kinematic successfully.");
+      RCLCPP_INFO(logger, "Current mode of the robot is = %s", get_mode_string(response->state.mode).c_str());
+    }
+  );  
 }
 
 void set_lighting(
@@ -82,19 +163,19 @@ void set_lighting(
 }  
 
 inline void set_lighting_default(rclcpp::Publisher<edu_robot::msg::SetLightingColor>& publisher) {
-  set_lighting(publisher, "all", 170, 170, 170, edu_robot::msg::SetLightingColor::DIM);
+  set_lighting(publisher, "all", 34, 34, 34, edu_robot::msg::SetLightingColor::DIM);
 }
 
 inline void set_lighting_turn_left(rclcpp::Publisher<edu_robot::msg::SetLightingColor>& publisher) {
-  set_lighting(publisher, "left_side", 70, 55, 0, edu_robot::msg::SetLightingColor::FLASH);
+  set_lighting(publisher, "left_side", 14, 11, 0, edu_robot::msg::SetLightingColor::FLASH);
 }
 
 inline void set_lighting_turn_right(rclcpp::Publisher<edu_robot::msg::SetLightingColor>& publisher) {
-  set_lighting(publisher, "right_side", 70, 55, 0, edu_robot::msg::SetLightingColor::FLASH);
+  set_lighting(publisher, "right_side", 14, 11, 0, edu_robot::msg::SetLightingColor::FLASH);
 }
 
 inline void set_lighting_warning(rclcpp::Publisher<edu_robot::msg::SetLightingColor>& publisher) {
-  set_lighting(publisher, "all", 70, 55, 0, edu_robot::msg::SetLightingColor::FLASH);
+  set_lighting(publisher, "all", 14, 11, 0, edu_robot::msg::SetLightingColor::FLASH);
 }
 
 inline void set_lighting_operation(rclcpp::Publisher<edu_robot::msg::SetLightingColor>& publisher) {
@@ -102,14 +183,16 @@ inline void set_lighting_operation(rclcpp::Publisher<edu_robot::msg::SetLighting
 }
 
 inline void set_lighting_parking(rclcpp::Publisher<edu_robot::msg::SetLightingColor>& publisher) {
-  set_lighting(publisher, "all", 100, 100, 100, edu_robot::msg::SetLightingColor::DIM);
+  set_lighting(publisher, "all", 20, 20, 20, edu_robot::msg::SetLightingColor::DIM);
 }
 
 } // end namespace control_function
 
-constexpr std::array<ButtonInterpreter, 7u> unassigned_buttons = {
+const std::array<ButtonInterpreter, 9u> unassigned_buttons = {
   ButtonInterpreter(Command::Disable, "disable", 8u),
   ButtonInterpreter(Command::Enable, "enable", 9u),
+  ButtonInterpreter(Command::SwitchToSkidDriveKinematic, "switch_to_skid_drive_kinematic", 0u),
+  ButtonInterpreter(Command::SwitchToMecanumDriveKinematic, "switch_to_mecanum_drive_kinematic", 2u),
   ButtonInterpreter(Command::IndicateTurnLeft, "indicate_turn_left", 4u),
   ButtonInterpreter(Command::IndicateTurnRight, "indicate_turn_right", 5u),
   ButtonInterpreter(Command::IndicateWarning, "indicate_warning", 13u),
@@ -200,6 +283,14 @@ RemoteControl::RemoteControl() : rclcpp::Node("remote_control")
     [this]{ control_function::enable(*this, *_client_set_mode); },
     nullptr
   }};
+  _command_binding[Command::SwitchToSkidDriveKinematic] = {{
+    [this]{ control_function::switch_to_skid_kinematic(*this, *_client_set_mode); },
+    nullptr
+  }};
+  _command_binding[Command::SwitchToMecanumDriveKinematic] = {{
+    [this]{ control_function::switch_to_mecanum_kinematic(*this, *_client_set_mode); },
+    nullptr
+  }};  
   _command_binding[Command::IndicateTurnLeft] = {{
     [this]{ control_function::set_lighting_turn_left(*_pub_lighting); },
     [this]{ control_function::set_lighting_default(*_pub_lighting); }

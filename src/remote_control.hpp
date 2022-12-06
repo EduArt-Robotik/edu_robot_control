@@ -19,6 +19,7 @@
 
 #include <memory>
 #include <map>
+#include <vector>
 
 namespace eduart {
 
@@ -30,6 +31,8 @@ enum class Command {
   Left,
   Turn,
   Throttle,
+  SwitchToSkidDriveKinematic,
+  SwitchToMecanumDriveKinematic,
   IndicateTurnLeft,
   IndicateTurnRight,
   IndicateWarning,
@@ -59,12 +62,17 @@ private:
 class ButtonInterpreter : public JoyInterpreter
 {
 public:
-  constexpr ButtonInterpreter(const Command command = Command::None, char const* const parameter_name = "",
-                              const std::size_t default_index = 0u)
+  template<typename... LinkedButtonIndices>
+  ButtonInterpreter(const Command command = Command::None, char const* const parameter_name = "",
+                    const std::size_t default_index = 0u, const LinkedButtonIndices... linked_indices)
     : JoyInterpreter(command, parameter_name, default_index)
     , _last_state(false)
     , _current_state(false)
-  { }
+  {
+    if constexpr (sizeof...(LinkedButtonIndices) > 0) {
+      _linked_buttons = std::make_shared<std::vector<std::size_t>>(linked_indices...);
+    }
+  }
 
   inline void updateState(const bool current_button_state) {
     _last_state = _current_state;
@@ -80,6 +88,7 @@ public:
 private:
   bool _last_state;
   bool _current_state;
+  std::shared_ptr<std::vector<std::size_t>> _linked_buttons = nullptr; //> this buttons has also been pressed
 };
 
 class AxisInterpreter : public JoyInterpreter
