@@ -14,6 +14,7 @@ find_package(edu_robot REQUIRED)
 
 add_executable(remote_control
   src/remote_control.cpp
+  src/set_mode.cpp
 )
 target_include_directories(remote_control PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>

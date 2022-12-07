@@ -5,7 +5,6 @@
  */
 #pragma once
 
-#include <cstddef>
 #include <rclcpp/node.hpp>
 #include <rclcpp/publisher.hpp>
 #include <rclcpp/subscription.hpp>
@@ -33,6 +32,7 @@ enum class Command {
   Throttle,
   SwitchToSkidDriveKinematic,
   SwitchToMecanumDriveKinematic,
+  OverrideCollisionAvoidance,
   IndicateTurnLeft,
   IndicateTurnRight,
   IndicateWarning,
