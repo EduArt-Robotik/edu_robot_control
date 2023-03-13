@@ -20,7 +20,11 @@ def generate_launch_description():
 
     joy_node = Node(
       package='joy',
-      executable='joy_node'
+      executable='joy_node',
+      parameters=[
+        {'autorepeat_rate': 20.0},
+        {'coalesce_interval_ms' : 50}
+      ]
     )
 
     remote_control_node = Node(

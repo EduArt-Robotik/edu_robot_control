@@ -92,7 +92,7 @@ RemoteControl::RemoteControl() : rclcpp::Node("remote_control")
   );
   _pub_twist = create_publisher<geometry_msgs::msg::Twist>(
     "cmd_vel",
-    rclcpp::QoS(2).best_effort().durability_volatile()
+    rclcpp::QoS(2).reliable().durability_volatile()
   );
   _pub_lighting = create_publisher<edu_robot::msg::SetLightingColor>(
     "set_lighting_color",
@@ -104,11 +104,11 @@ RemoteControl::RemoteControl() : rclcpp::Node("remote_control")
   const std::string parameter_prefix = "joy_mapping";
 
   for (const auto& button : unassigned_buttons) {
-    declare_parameter<int>(parameter_prefix + "/button/" + button.parameterName(), button.defaultIndex());
+    declare_parameter<int>(parameter_prefix + ".button." + button.parameterName(), button.defaultIndex());
   }
   for (const auto& button : unassigned_buttons) {
     const std::size_t index = static_cast<std::size_t>(
-      get_parameter(parameter_prefix + "/button/" + button.parameterName()).as_int()
+      get_parameter(parameter_prefix + ".button." + button.parameterName()).as_int()
     );
     const auto search = _button_mapping.find(index);
 
@@ -124,11 +124,11 @@ RemoteControl::RemoteControl() : rclcpp::Node("remote_control")
 
   // Do mapping of the joy axes.
   for (const auto& axis : unassigned_joy_axis) {
-    declare_parameter<int>(parameter_prefix + "/axis/" + axis.parameterName(), axis.defaultIndex());
+    declare_parameter<int>(parameter_prefix + ".axis." + axis.parameterName(), axis.defaultIndex());
   }
   for (const auto& axis : unassigned_joy_axis) {
     const std::size_t index = static_cast<std::size_t>(
-      get_parameter(parameter_prefix + "/axis/" + axis.parameterName()).as_int()
+      get_parameter(parameter_prefix + ".axis." + axis.parameterName()).as_int()
     );
     const auto search = _axis_mapping.find(index);
 
