@@ -104,11 +104,11 @@ RemoteControl::RemoteControl() : rclcpp::Node("remote_control")
   const std::string parameter_prefix = "joy_mapping";
 
   for (const auto& button : unassigned_buttons) {
-    declare_parameter<int>(parameter_prefix + "/button/" + button.parameterName(), button.defaultIndex());
+    declare_parameter<int>(parameter_prefix + ".button." + button.parameterName(), button.defaultIndex());
   }
   for (const auto& button : unassigned_buttons) {
     const std::size_t index = static_cast<std::size_t>(
-      get_parameter(parameter_prefix + "/button/" + button.parameterName()).as_int()
+      get_parameter(parameter_prefix + ".button." + button.parameterName()).as_int()
     );
     const auto search = _button_mapping.find(index);
 
@@ -124,11 +124,11 @@ RemoteControl::RemoteControl() : rclcpp::Node("remote_control")
 
   // Do mapping of the joy axes.
   for (const auto& axis : unassigned_joy_axis) {
-    declare_parameter<int>(parameter_prefix + "/axis/" + axis.parameterName(), axis.defaultIndex());
+    declare_parameter<int>(parameter_prefix + ".axis." + axis.parameterName(), axis.defaultIndex());
   }
   for (const auto& axis : unassigned_joy_axis) {
     const std::size_t index = static_cast<std::size_t>(
-      get_parameter(parameter_prefix + "/axis/" + axis.parameterName()).as_int()
+      get_parameter(parameter_prefix + ".axis." + axis.parameterName()).as_int()
     );
     const auto search = _axis_mapping.find(index);
 
