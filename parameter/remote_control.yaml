@@ -1,7 +1,7 @@
 /remote_control:
   ros__parameters:
     max_angular_velocity: 3.1415927410125732
-    max_linear_velocity: 1.0
+    max_linear_velocity: 1.5
     use_sim_time: false
 
     joy_mapping:
@@ -19,3 +19,6 @@
         indicate_turn_left: 4
         indicate_turn_right: 5
         indicate_warning: 13
+        override_collision_avoidance: 7
+        switch_to_mecanum_drive_kinematic: 2
+        switch_to_skid_drive_kinematic: 0
