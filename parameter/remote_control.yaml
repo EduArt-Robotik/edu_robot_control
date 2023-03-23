@@ -1,4 +1,4 @@
-/remote_control:
+/**:
   ros__parameters:
     max_angular_velocity: 3.1415927410125732
     max_linear_velocity: 1.5
