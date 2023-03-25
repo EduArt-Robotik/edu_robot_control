@@ -15,11 +15,8 @@ std::string get_mode_string(const edu_robot::msg::Mode mode)
   if (mode.value & edu_robot::msg::Mode::REMOTE_CONTROLLED) {
     mode_string += "REMOTE CONTROLLED|";
   }
-  if (mode.value & edu_robot::msg::Mode::FLEET_MASTER) {
-    mode_string += "FLEET_MASTER|";
-  }
-  if (mode.value & edu_robot::msg::Mode::FLEET_SLAVE) {
-    mode_string += "FLEET_SLAVE|";
+  if (mode.value & edu_robot::msg::Mode::FLEET) {
+    mode_string += "FLEET|";
   }
   if (mode.value & edu_robot::msg::Mode::COLLISION_AVOIDANCE_OVERRIDE_ENABLED) {
     mode_string += "COLLISION_AVOIDANCE_OVERRIDE_ENABLED|";
@@ -77,7 +74,7 @@ void enable(rclcpp::Node& node, rclcpp::Client<edu_robot::srv::SetMode>& service
       auto response = future.get().second;
 
       if ((response->state.mode.value & request->mode.value) == false) {
-        RCLCPP_ERROR_STREAM(logger, "Can't disable robot! Robot is in mode = " << get_mode_string(response->state.mode));
+        RCLCPP_ERROR_STREAM(logger, "Can't enable robot! Robot is in mode = " << get_mode_string(response->state.mode));
         return;
       }
 
@@ -133,6 +130,36 @@ void switch_to_mecanum_kinematic(rclcpp::Node& node, rclcpp::Client<edu_robot::s
       RCLCPP_INFO(logger, "Current mode of the robot is = %s", get_mode_string(response->state.mode).c_str());
     }
   );  
+}
+
+void enable_fleet_drive(
+  rclcpp::Node& node, rclcpp::Client<edu_robot::srv::SetMode>& service_client)
+{
+  auto request = std::make_shared<edu_robot::srv::SetMode::Request>();
+  request->mode.value = edu_robot::msg::Mode::FLEET;
+
+  RCLCPP_INFO(node.get_logger(), "Switch to fleet drive mode.");
+  service_client.async_send_request(
+    request,
+    [logger = node.get_logger()](ResponseFuture future) {
+      auto request = future.get().first;
+      auto response = future.get().second;
+
+      if ((response->state.mode.value & request->mode.value) == false) {
+        RCLCPP_ERROR_STREAM(logger, "Can't switch to fleet drive mode! Robot is in mode = "
+                                    << get_mode_string(response->state.mode));
+        return;
+      }
+
+      RCLCPP_INFO(logger, "Switched to fleet drive mode successfully.");
+      RCLCPP_INFO(logger, "Current mode of the robot is = %s", get_mode_string(response->state.mode).c_str());
+    }
+  );
+}
+
+void disable_fleet_drive(rclcpp::Node& node, rclcpp::Client<edu_robot::srv::SetMode>& service_client)
+{
+  disable(node, service_client);
 }
 
 void enable_collision_avoidance_override(rclcpp::Node& node, rclcpp::Client<edu_robot::srv::SetMode>& service_client)

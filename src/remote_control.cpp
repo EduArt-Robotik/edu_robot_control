@@ -62,7 +62,7 @@ inline void set_lighting_parking(rclcpp::Publisher<edu_robot::msg::SetLightingCo
 
 } // end namespace control_function
 
-const std::array<ButtonInterpreter, 10u> unassigned_buttons = {
+const std::array<ButtonInterpreter, 11u> unassigned_buttons = {
   ButtonInterpreter(Command::Disable, "disable", 8u),
   ButtonInterpreter(Command::Enable, "enable", 9u),
   ButtonInterpreter(Command::SwitchToSkidDriveKinematic, "switch_to_skid_drive_kinematic", 0u),
@@ -73,6 +73,7 @@ const std::array<ButtonInterpreter, 10u> unassigned_buttons = {
   ButtonInterpreter(Command::IndicateOperation, "indicate_operation", 1u),
   ButtonInterpreter(Command::IndicateParking, "indicate_parking", 3u),
   ButtonInterpreter(Command::OverrideCollisionAvoidance, "override_collision_avoidance", 7u),
+  ButtonInterpreter(Command::EnableFleetDrive, "enable_fleet_drive", 6u)
 };
 
 constexpr std::array<AxisInterpreter, 4u> unassigned_joy_axis = {
@@ -189,6 +190,10 @@ RemoteControl::RemoteControl() : rclcpp::Node("remote_control")
   _command_binding[Command::OverrideCollisionAvoidance] = {{
     [this]{ control_function::enable_collision_avoidance_override(*this, *_client_set_mode); },
     [this]{ control_function::disable_collision_avoidance_override(*this, *_client_set_mode); }
+  }};
+  _command_binding[Command::EnableFleetDrive] = {{
+    [this]{ control_function::enable_fleet_drive(*this, *_client_set_mode); },
+    nullptr
   }};
 }
 
