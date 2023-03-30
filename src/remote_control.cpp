@@ -1,5 +1,6 @@
 #include "remote_control.hpp"
 #include "set_mode.h"
+#include "activation_function.h"
 
 #include <rclcpp/executors.hpp>
 #include <rclcpp/logging.hpp>
@@ -226,20 +227,26 @@ void RemoteControl::callbackJoy(std::shared_ptr<const sensor_msgs::msg::Joy> msg
     switch (axis.second.command()) {
       case Command::Forward: 
         // expect axis values between 0 and 1, however it is ensured that the max speed is not exceeded.
-        twist_cmd.linear.x = std::min(_parameter.max_linear_velocity,
-                                      msg->axes[axis.first] * _parameter.max_linear_velocity);
+        twist_cmd.linear.x = std::min(
+          _parameter.max_linear_velocity,
+          control::activation_function::quadric(msg->axes[axis.first], _parameter.max_linear_velocity)
+        );
         break;
 
       case Command::Left:
         // expect axis values between 0 and 1, however it is ensured that the max speed is not exceeded.
-        twist_cmd.linear.y = std::min(_parameter.max_linear_velocity,
-                                      msg->axes[axis.first] * _parameter.max_linear_velocity);      
+        twist_cmd.linear.y = std::min(
+          _parameter.max_linear_velocity,
+          control::activation_function::quadric(msg->axes[axis.first], _parameter.max_linear_velocity)
+        );
         break;
 
       case Command::Turn:
         // expect axis values between 0 and 1, however it is ensured that the max speed is not exceeded.
-        twist_cmd.angular.z = std::min(_parameter.max_angular_velocity,
-                                       msg->axes[axis.first] * _parameter.max_angular_velocity);
+        twist_cmd.angular.z = std::min(
+          _parameter.max_angular_velocity,
+          control::activation_function::quadric(msg->axes[axis.first], _parameter.max_angular_velocity)
+        );
         break;
 
       case Command::Throttle:
