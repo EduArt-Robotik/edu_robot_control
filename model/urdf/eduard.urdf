@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
-<robot name="eduard">
-  <link name="base_link">
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="$(arg robot_name)">
+  <xacro:arg name="robot_name" default="eduard"/>
+  <link name="$(arg robot_name)/base_link">
     <visual>
       <geometry>
         <mesh filename="package://edu_robot_control/model/mesh/eduard-chassis.dae"/>
@@ -8,7 +9,7 @@
     </visual>
   </link>
 
-  <link name="wheel_front_left">
+  <link name="$(arg robot_name)/wheel_front_left">
     <visual>
       <geometry>
         <mesh filename="package://edu_robot_control/model/mesh/offroad-wheel-eduard.dae"/>
@@ -16,14 +17,14 @@
     </visual>
   </link>
 
-  <joint name="base_to_wheel_front_left" type="continuous">
+  <joint name="$(arg robot_name)/base_to_wheel_front_left" type="continuous">
     <origin rpy="-1.570796327 0 0" xyz="0.125 0.163 0.02"/>  
-    <parent link="base_link"/>
-    <child link="wheel_front_left"/>
+    <parent link="$(arg robot_name)/base_link"/>
+    <child link="$(arg robot_name)/wheel_front_left"/>
     <axis xyz="0 0 1"/>
   </joint>
 
-  <link name="wheel_front_right">
+  <link name="$(arg robot_name)/wheel_front_right">
     <visual>
       <geometry>
         <mesh filename="package://edu_robot_control/model/mesh/offroad-wheel-eduard.dae"/>
@@ -31,14 +32,14 @@
     </visual>
   </link>
 
-  <joint name="base_to_wheel_front_right" type="continuous">
+  <joint name="$(arg robot_name)/base_to_wheel_front_right" type="continuous">
     <origin rpy="1.570796327 0 0" xyz="0.125 -0.163 0.02"/>
-    <parent link="base_link"/>
-    <child link="wheel_front_right"/>
+    <parent link="$(arg robot_name)/base_link"/>
+    <child link="$(arg robot_name)/wheel_front_right"/>
     <axis xyz="0 0 1"/>    
   </joint>
 
-  <link name="wheel_rear_left">
+  <link name="$(arg robot_name)/wheel_rear_left">
     <visual>
       <geometry>
         <mesh filename="package://edu_robot_control/model/mesh/offroad-wheel-eduard.dae"/>
@@ -46,14 +47,14 @@
     </visual>
   </link>
 
-  <joint name="base_to_wheel_rear_left" type="continuous">
+  <joint name="$(arg robot_name)/base_to_wheel_rear_left" type="continuous">
     <origin rpy="-1.570796327 0 0" xyz="-0.125 0.163 0.02"/>
-    <parent link="base_link"/>
-    <child link="wheel_rear_left"/>
+    <parent link="$(arg robot_name)/base_link"/>
+    <child link="$(arg robot_name)/wheel_rear_left"/>
     <axis xyz="0 0 1"/>    
   </joint>
 
-  <link name="wheel_rear_right">
+  <link name="$(arg robot_name)/wheel_rear_right">
     <visual>
       <geometry>
         <mesh filename="package://edu_robot_control/model/mesh/offroad-wheel-eduard.dae"/>
@@ -61,9 +62,9 @@
     </visual>
   </link>
 
-  <joint name="base_to_wheel_rear_right" type="continuous">
-    <parent link="base_link"/>
-    <child link="wheel_rear_right"/>
+  <joint name="$(arg robot_name)/base_to_wheel_rear_right" type="continuous">
+    <parent link="$(arg robot_name)/base_link"/>
+    <child link="$(arg robot_name)/wheel_rear_right"/>
     <origin rpy="1.570796327 0 0" xyz="-0.125 -0.163 0.02"/>
     <axis xyz="0 0 1"/>    
   </joint>
