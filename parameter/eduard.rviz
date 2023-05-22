@@ -119,8 +119,6 @@ Visualization Manager:
           Value: true
         eduard/red/imu/base:
           Value: true
-        eduard/red/odom:
-          Value: true
         eduard/red/range/front/left:
           Value: true
         eduard/red/range/front/right:
@@ -143,26 +141,25 @@ Visualization Manager:
       Show Axes: true
       Show Names: true
       Tree:
-        eduard/red/odom:
-          eduard/red/base_footprint:
-            eduard/red/imu/base:
-              eduard/red/base_link:
-                eduard/red/range/front/left:
-                  {}
-                eduard/red/range/front/right:
-                  {}
-                eduard/red/range/rear/left:
-                  {}
-                eduard/red/range/rear/right:
-                  {}
-                eduard/red/wheel_front_left:
-                  {}
-                eduard/red/wheel_front_right:
-                  {}
-                eduard/red/wheel_rear_left:
-                  {}
-                eduard/red/wheel_rear_right:
-                  {}
+        eduard/red/base_footprint:
+          eduard/red/imu/base:
+            eduard/red/base_link:
+              eduard/red/range/front/left:
+                {}
+              eduard/red/range/front/right:
+                {}
+              eduard/red/range/rear/left:
+                {}
+              eduard/red/range/rear/right:
+                {}
+              eduard/red/wheel_front_left:
+                {}
+              eduard/red/wheel_front_right:
+                {}
+              eduard/red/wheel_rear_left:
+                {}
+              eduard/red/wheel_rear_right:
+                {}
       Update Interval: 0
       Value: true
     - Alpha: 1
@@ -262,7 +259,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 1.3460956811904907
+      Distance: 1.0246379375457764
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -277,10 +274,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 1.1547966003417969
+      Pitch: 0.9247968196868896
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 0.6972672939300537
+      Yaw: 4.062254905700684
     Saved: ~
 Window Geometry:
   Displays:
@@ -298,5 +295,5 @@ Window Geometry:
   Views:
     collapsed: true
   Width: 1653
-  X: 1703
-  Y: 179
+  X: 1893
+  Y: 72

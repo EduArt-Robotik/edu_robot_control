@@ -18,9 +18,17 @@ def generate_launch_description():
     urdf_eduard_model_path = os.path.join(model_path, 'eduard.urdf')
 
     robot_name = os.getenv('EDU_ROBOT_NAMESPACE', default='eduard')
+    wheel_type = os.getenv('EDU_ROBOT_WHEEL_TYPE', default='mecanum')
+
     print("use robot name = ", robot_name)
-    robot_description = xacro.process_file(urdf_eduard_model_path, mappings={'robot_name': robot_name}).toprettyxml()
-    # robot_description = ParameterValue(Command(['xacro ', urdf_eduard_model_path, ' robot_name:=', robot_name]), value_type=str)
+    print("use wheel type = ", wheel_type)
+    robot_description = xacro.process_file(
+        urdf_eduard_model_path,
+        mappings={
+            'robot_name': robot_name,
+            'wheel_type': wheel_type
+        }
+    ).toprettyxml()
 
     robot_state_publisher_node = Node(
         package='robot_state_publisher',
