@@ -64,5 +64,5 @@ RUN export RMW_IMPLEMENTATION=rmw_fastrtps_cpp \
     && source /opt/ros/$ROS_DISTRO/setup.bash \
     && colcon build --symlink-install --event-handlers console_direct+ --cmake-args -DCMAKE_BUILD_TYPE=Release
 
-CMD source /home/$USER/eduart_ws/install/setup.bash \
+CMD source /home/user/eduart_ws/install/setup.bash \
     && ros2 launch edu_robot_control eduard_monitor.launch.py
