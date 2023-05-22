@@ -33,6 +33,7 @@ enum class Command {
   SwitchToSkidDriveKinematic,
   SwitchToMecanumDriveKinematic,
   OverrideCollisionAvoidance,
+  EnableFleetDrive,
   IndicateTurnLeft,
   IndicateTurnRight,
   IndicateWarning,

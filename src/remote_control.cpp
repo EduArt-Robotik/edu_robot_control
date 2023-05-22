@@ -1,5 +1,6 @@
 #include "remote_control.hpp"
 #include "set_mode.h"
+#include "activation_function.h"
 
 #include <rclcpp/executors.hpp>
 #include <rclcpp/logging.hpp>
@@ -62,7 +63,7 @@ inline void set_lighting_parking(rclcpp::Publisher<edu_robot::msg::SetLightingCo
 
 } // end namespace control_function
 
-const std::array<ButtonInterpreter, 10u> unassigned_buttons = {
+const std::array<ButtonInterpreter, 11u> unassigned_buttons = {
   ButtonInterpreter(Command::Disable, "disable", 8u),
   ButtonInterpreter(Command::Enable, "enable", 9u),
   ButtonInterpreter(Command::SwitchToSkidDriveKinematic, "switch_to_skid_drive_kinematic", 0u),
@@ -73,6 +74,7 @@ const std::array<ButtonInterpreter, 10u> unassigned_buttons = {
   ButtonInterpreter(Command::IndicateOperation, "indicate_operation", 1u),
   ButtonInterpreter(Command::IndicateParking, "indicate_parking", 3u),
   ButtonInterpreter(Command::OverrideCollisionAvoidance, "override_collision_avoidance", 7u),
+  ButtonInterpreter(Command::EnableFleetDrive, "enable_fleet_drive", 6u)
 };
 
 constexpr std::array<AxisInterpreter, 4u> unassigned_joy_axis = {
@@ -92,7 +94,7 @@ RemoteControl::RemoteControl() : rclcpp::Node("remote_control")
   );
   _pub_twist = create_publisher<geometry_msgs::msg::Twist>(
     "cmd_vel",
-    rclcpp::QoS(2).reliable().durability_volatile()
+    rclcpp::QoS(2).best_effort().durability_volatile()
   );
   _pub_lighting = create_publisher<edu_robot::msg::SetLightingColor>(
     "set_lighting_color",
@@ -190,6 +192,10 @@ RemoteControl::RemoteControl() : rclcpp::Node("remote_control")
     [this]{ control_function::enable_collision_avoidance_override(*this, *_client_set_mode); },
     [this]{ control_function::disable_collision_avoidance_override(*this, *_client_set_mode); }
   }};
+  _command_binding[Command::EnableFleetDrive] = {{
+    [this]{ control_function::enable_fleet_drive(*this, *_client_set_mode); },
+    nullptr
+  }};
 }
 
 RemoteControl::~RemoteControl()
@@ -221,20 +227,26 @@ void RemoteControl::callbackJoy(std::shared_ptr<const sensor_msgs::msg::Joy> msg
     switch (axis.second.command()) {
       case Command::Forward: 
         // expect axis values between 0 and 1, however it is ensured that the max speed is not exceeded.
-        twist_cmd.linear.x = std::min(_parameter.max_linear_velocity,
-                                      msg->axes[axis.first] * _parameter.max_linear_velocity);
+        twist_cmd.linear.x = std::min(
+          _parameter.max_linear_velocity,
+          control::activation_function::quadric(msg->axes[axis.first], _parameter.max_linear_velocity)
+        );
         break;
 
       case Command::Left:
         // expect axis values between 0 and 1, however it is ensured that the max speed is not exceeded.
-        twist_cmd.linear.y = std::min(_parameter.max_linear_velocity,
-                                      msg->axes[axis.first] * _parameter.max_linear_velocity);      
+        twist_cmd.linear.y = std::min(
+          _parameter.max_linear_velocity,
+          control::activation_function::quadric(msg->axes[axis.first], _parameter.max_linear_velocity)
+        );
         break;
 
       case Command::Turn:
         // expect axis values between 0 and 1, however it is ensured that the max speed is not exceeded.
-        twist_cmd.angular.z = std::min(_parameter.max_angular_velocity,
-                                       msg->axes[axis.first] * _parameter.max_angular_velocity);
+        twist_cmd.angular.z = std::min(
+          _parameter.max_angular_velocity,
+          control::activation_function::quadric(msg->axes[axis.first], _parameter.max_angular_velocity)
+        );
         break;
 
       case Command::Throttle:
