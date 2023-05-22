@@ -6,7 +6,7 @@ download-sources:
 	git clone --branch ros2 https://github.com/EduArt-Robotik/joystick_drivers.git
 
 build-docker:
-	docker build -t eduard-iotbot:0.2.0 .
+	docker build -t eduard-robot-control:0.2.0 .
 
 all: download-sources build-docker
 	echo "build edu_robot and edu_robot_control into a docker image"

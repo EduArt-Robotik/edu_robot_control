@@ -18,7 +18,7 @@
   </link>
 
   <joint name="$(arg robot_name)/base_to_wheel_front_left" type="continuous">
-    <origin rpy="-1.570796327 0 0" xyz="0.125 0.163 0.02"/>  
+    <origin rpy="1.570796327 0 0" xyz="0.125 0.163 0.02"/>  
     <parent link="$(arg robot_name)/base_link"/>
     <child link="$(arg robot_name)/wheel_front_left"/>
     <axis xyz="0 0 1"/>
@@ -33,7 +33,7 @@
   </link>
 
   <joint name="$(arg robot_name)/base_to_wheel_front_right" type="continuous">
-    <origin rpy="1.570796327 0 0" xyz="0.125 -0.163 0.02"/>
+    <origin rpy="-1.570796327 0 0" xyz="0.125 -0.163 0.02"/>
     <parent link="$(arg robot_name)/base_link"/>
     <child link="$(arg robot_name)/wheel_front_right"/>
     <axis xyz="0 0 1"/>    
@@ -48,7 +48,7 @@
   </link>
 
   <joint name="$(arg robot_name)/base_to_wheel_rear_left" type="continuous">
-    <origin rpy="-1.570796327 0 0" xyz="-0.125 0.163 0.02"/>
+    <origin rpy="1.570796327 0 0" xyz="-0.125 0.163 0.02"/>
     <parent link="$(arg robot_name)/base_link"/>
     <child link="$(arg robot_name)/wheel_rear_left"/>
     <axis xyz="0 0 1"/>    
@@ -65,7 +65,7 @@
   <joint name="$(arg robot_name)/base_to_wheel_rear_right" type="continuous">
     <parent link="$(arg robot_name)/base_link"/>
     <child link="$(arg robot_name)/wheel_rear_right"/>
-    <origin rpy="1.570796327 0 0" xyz="-0.125 -0.163 0.02"/>
+    <origin rpy="-1.570796327 0 0" xyz="-0.125 -0.163 0.02"/>
     <axis xyz="0 0 1"/>    
   </joint>
 </robot>
