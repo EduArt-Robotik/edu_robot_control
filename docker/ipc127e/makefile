@@ -1,12 +1,12 @@
 current_dir = $(shell pwd)
 
 download-sources:
-	git clone --branch develop https://github.com/EduArt-Robotik/edu_robot.git
-	git clone --branch develop https://github.com/EduArt-Robotik/edu_robot_control.git
+	git clone --branch 0.2.1 https://github.com/EduArt-Robotik/edu_robot.git
+	git clone --branch 0.2.0 https://github.com/EduArt-Robotik/edu_robot_control.git
 	git clone --branch ros2 https://github.com/EduArt-Robotik/joystick_drivers.git
 
 build-docker:
-	docker build -t eduard-ipc127e:0.2.0 .
+	docker build -t eduard-robot-control:0.2.0 .
 
 all: download-sources build-docker
 	echo "build edu_robot and edu_robot_control into a docker image"
