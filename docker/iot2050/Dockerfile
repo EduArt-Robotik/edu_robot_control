@@ -46,7 +46,7 @@ RUN \
     && echo "export RMW_IMPLEMENTATION=rmw_fastrtps_cpp" >> /home/$USER/.bashrc \
     && echo "export FASTRTPS_DEFAULT_PROFILES_FILE=/home/$USER/fastrtps_profile.xml" >> /home/$USER/.bashrc \
     && echo "source /opt/ros/$ROS_DISTRO/setup.bash" >> /home/$USER/.bashrc \
-    && echo "source /home/$USER/ipcbot_ws/install/setup.bash" >> /home/$USER/.bashrc \
+    && echo "source /home/$USER/iotbot_ws/install/setup.bash" >> /home/$USER/.bashrc \
 ########################################################
 # Clean up
     && apt-get clean
@@ -55,9 +55,9 @@ RUN \
 USER $USER
 
 # set up iotbot workspace
-RUN mkdir -p /home/$USER/ipcbot_ws/src
+RUN mkdir -p /home/$USER/iotbot_ws/src
 
-WORKDIR /home/$USER/ipcbot_ws
+WORKDIR /home/$USER/iotbot_ws
 
 COPY ./edu_robot /home/$USER/iotbot_ws/src/edu_robot
 COPY ./edu_robot_control /home/$USER/iotbot_ws/src/edu_robot_control
