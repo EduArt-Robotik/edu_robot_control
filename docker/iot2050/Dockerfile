@@ -1,17 +1,35 @@
-FROM ros:humble-ros-base-jammy
+FROM ubuntu:jammy
 
 # using bash
 SHELL ["/bin/bash", "-c"]
+ENV UBUNTU_DISTRO jammy
 ENV ROS_DISTRO humble
 ENV USER user
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN \
     apt-get update \
-    && apt-get install -y software-properties-common
-
-# install Joystick Driver for ROS2 foxy
-RUN sudo apt-get install -y \
+    && apt-get install -q -y --no-install-recommends \
+    apt-utils \
+    software-properties-common \
+    nano \
+    curl \
+    gnupg \
+    git \
+    build-essential \
+    sudo \
+########################################################
+# Install ROS
+## Get package archive key and ROS source list entry.
+    && curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg \
+    && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $UBUNTU_DISTRO main" | tee /etc/apt/sources.list.d/ros2.list > /dev/null \
+    && apt-get update \
+########################################################
+# Install ROS packages
+    && apt-get install -q -y --no-install-recommends \
+    ros-$ROS_DISTRO-ros-base \
+    python3-colcon-common-extensions \
+    software-properties-common \
     ros-$ROS_DISTRO-rmw-fastrtps-cpp \
     ros-$ROS_DISTRO-fastrtps
 
@@ -25,21 +43,23 @@ RUN \
 ########################################################
 # Add exports and sources to bash rc for easy handling.
     && echo "export RMW_IMPLEMENTATION=rmw_fastrtps_cpp" >> /home/$USER/.bashrc \
-    # && echo "export FASTRTPS_DEFAULT_PROFILES_FILE=/home/$USER/fastrtps_profile.xml" >> /home/$USER/.bashrc \
+    && echo "export FASTRTPS_DEFAULT_PROFILES_FILE=/home/$USER/fastrtps_profile.xml" >> /home/$USER/.bashrc \
     && echo "source /opt/ros/$ROS_DISTRO/setup.bash" >> /home/$USER/.bashrc \
-    && echo "source /home/$USER/iotbot_ws/install/setup.bash" >> /home/$USER/.bashrc \
+    && echo "source /home/$USER/ipcbot_ws/install/setup.bash" >> /home/$USER/.bashrc \
 ########################################################
 # Clean up
     && apt-get clean
 
+# work with user user
+USER $USER
+
 # set up iotbot workspace
-RUN mkdir -p /home/$USER/iotbot_ws/src/iotbot
+RUN mkdir -p /home/$USER/ipcbot_ws/src
+
+WORKDIR /home/$USER/ipcbot_ws
 
 COPY ./edu_robot /home/$USER/iotbot_ws/src/edu_robot
 COPY ./edu_robot_control /home/$USER/iotbot_ws/src/edu_robot_control
-COPY ./joystick_drivers /home/$USER/iotbot_ws/src/joystick_drivers
-
-WORKDIR /home/$USER/iotbot_ws
 
 # build EduArt packages nodes
 RUN export RMW_IMPLEMENTATION=rmw_fastrtps_cpp \
