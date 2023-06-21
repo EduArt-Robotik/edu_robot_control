@@ -31,7 +31,8 @@ RUN \
     python3-colcon-common-extensions \
     software-properties-common \
     ros-$ROS_DISTRO-rmw-fastrtps-cpp \
-    ros-$ROS_DISTRO-fastrtps
+    ros-$ROS_DISTRO-fastrtps \
+    ros-$ROS_DISTRO-joy
 
 # write source commands to .bashrc -> no need to source afterwards
 RUN \
