@@ -13,7 +13,7 @@ RUN \
 # install Joystick Driver for ROS2
 RUN apt-get update \
     && sudo apt-get install -y \
-#    ros-$ROS_DISTRO-joy \
+    ros-$ROS_DISTRO-joy \
     ros-$ROS_DISTRO-rmw-fastrtps-cpp \
     ros-$ROS_DISTRO-fastrtps
 
@@ -39,7 +39,6 @@ RUN mkdir -p /home/$USER/ipcbot_ws/src/iotbot
 
 COPY ./edu_robot /home/$USER/ipcbot_ws/src/edu_robot
 COPY ./edu_robot_control /home/$USER/ipcbot_ws/src/edu_robot_control
-COPY ./joystick_drivers /home/$USER/ipcbot_ws/src/joystick_drivers
 COPY ./fastrtps_profile.xml /home/$USER/ipcbot_ws
 
 WORKDIR /home/$USER/ipcbot_ws

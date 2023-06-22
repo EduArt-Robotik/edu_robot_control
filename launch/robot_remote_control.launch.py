@@ -16,7 +16,7 @@ def generate_launch_description():
     parameter_file = PathJoinSubstitution([
       package_path,
       'parameter',
-      'remote_control.yaml'
+      'remote_control_humble.yaml'
     ])
 
     joy_node = Node(
