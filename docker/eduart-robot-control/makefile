@@ -1,4 +1,4 @@
-image_name = eduard-robot-control:0.2.0
+image_name = eduart-robot-control:0.2.0
 
 download-sources:
 	git clone --branch 0.2.0 https://github.com/EduArt-Robotik/edu_robot_control.git

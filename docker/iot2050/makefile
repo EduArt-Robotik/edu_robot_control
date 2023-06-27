@@ -1,15 +1,9 @@
-current_dir = $(shell pwd)
-
-download-sources:
-	git clone --branch 0.2.1 https://github.com/EduArt-Robotik/edu_robot.git
-	git clone --branch 0.2.0 https://github.com/EduArt-Robotik/edu_robot_control.git
+image_name = eduard-robot-control-iotbot:0.2.1
 
 build-docker:
-	docker build -t eduard-robot-control:0.2.1 .
+	docker build -t $(image_name) .
 
-all: download-sources build-docker
-	echo "build edu_robot and edu_robot_control into a docker image"
+upload-docker:
+	docker tag $(image_name) eduartrobotik/$(image_name)
+	docker push eduartrobotik/$(image_name)
 
-clean:
-	rm -rf edu_robot
-	rm -rf edu_robot_control
