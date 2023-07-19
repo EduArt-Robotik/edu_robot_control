@@ -6,6 +6,13 @@ ENV ROS_DISTRO humble
 ENV USER user
 ENV DEBIAN_FRONTEND=noninteractive
 
+# installing of linux joy node
+USER root
+RUN apt-get update \
+    && apt-get install -y ros-$ROS_DISTRO-joy-linux
+
+USER $USER
+
 # launch control node and joy interpreter
 CMD export RMW_IMPLEMENTATION=rmw_fastrtps_cpp \
     && export FASTRTPS_DEFAULT_PROFILES_FILE=/home/user/ros/fastrtps_profile.xml \
