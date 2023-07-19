@@ -7,7 +7,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 USER $USER
 
 # set up  workspace
-COPY ./edu_robot_control /home/$USER/iotbot_ws/src/edu_robot_control
+COPY ./edu_robot_control /home/$USER/ros/src/edu_robot_control
 
 # build EduArt packages nodes
 RUN source /opt/ros/$ROS_DISTRO/setup.bash \
