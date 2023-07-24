@@ -17,5 +17,6 @@ USER $USER
 CMD echo "launching eduard ipc127e robot control software" \
     # && export RMW_IMPLEMENTATION=rmw_fastrtps_cpp \
     # && export FASTRTPS_DEFAULT_PROFILES_FILE=/home/user/ros/fastrtps_profile.xml \
+    && source /home/user/.bashrc \
     && source /home/user/ros/install/setup.bash \
     && ros2 launch edu_robot_control robot_remote_control_ipc127e.launch.py
