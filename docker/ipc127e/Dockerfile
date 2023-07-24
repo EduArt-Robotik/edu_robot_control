@@ -13,6 +13,10 @@ RUN apt-get update \
 
 USER $USER
 
+COPY ./ipc_cyclone_dds_profile.xml /home/$USER/
+
+ENV CYCLONEDDS_URI=/home/$USER/ipc_cyclone_dds_profile.xml
+
 # launch control node and joy interpreter
 CMD echo "launching eduard ipc127e robot control software" \
     # && export RMW_IMPLEMENTATION=rmw_fastrtps_cpp \
