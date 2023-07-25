@@ -11,10 +11,10 @@ RUN apt-get update \
     && apt-get install -y \
     python3-pip \
     libhidapi-dev \
-    && apt-get clean
-USER user
-RUN pip3 install hid
+    && apt-get clean \
+    && pip3 install hid
 
+USER $USER
 COPY ./iot_cyclone_dds_profile.xml /home/$USER/
 COPY ./edu_hid_joy /home/$USER/ros/src/edu_hid_joy
 
