@@ -10,3 +10,8 @@ upload-docker:
 	docker tag $(image_name) eduartrobotik/$(image_name)
 	docker push eduartrobotik/$(image_name)
 
+download-sources:
+	git clone --branch main https://github.com/EduArt-Robotik/edu_hid_joy.git
+
+clean:
+	rm -rf edu_hid_joy

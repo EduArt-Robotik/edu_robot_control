@@ -16,15 +16,25 @@ def generate_launch_description():
     parameter_file = PathJoinSubstitution([
       package_path,
       'parameter',
-      'remote_control.yaml'
+      'hid_joy_remote_control.yaml'
     ])
 
+    # joy_node = Node(
+    #   package='joy',
+    #   executable='joy_node',
+    #   parameters=[
+    #     {'autorepeat_rate': 20.0},
+    #     {'coalesce_interval_ms' : 50}
+    #   ],
+    #   namespace=EnvironmentVariable('EDU_ROBOT_NAMESPACE', default_value="eduard")
+    # )
+
     joy_node = Node(
-      package='joy',
-      executable='joy_node',
+      package='edu_hid_joy',
+      executable='edu_hid_joy',
       parameters=[
-        {'autorepeat_rate': 20.0},
-        {'coalesce_interval_ms' : 50}
+        {'rate': 20.0},
+        {'device_name': 'Wireless'}
       ],
       namespace=EnvironmentVariable('EDU_ROBOT_NAMESPACE', default_value="eduard")
     )
