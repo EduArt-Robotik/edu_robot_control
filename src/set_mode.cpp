@@ -15,7 +15,7 @@ std::string get_mode_string(const edu_robot::msg::Mode mode)
   if (mode.mode & edu_robot::msg::Mode::REMOTE_CONTROLLED) {
     mode_string += "REMOTE CONTROLLED|";
   }
-  if (mode.mode & edu_robot::msg::Mode::FLEET) {
+  if (mode.mode & edu_robot::msg::Mode::AUTONOMOUS) {
     mode_string += "FLEET|";
   }
   if (mode.feature_mode & edu_robot::msg::Mode::COLLISION_AVOIDANCE) {
@@ -132,7 +132,7 @@ void enable_fleet_drive(
   rclcpp::Node& node, rclcpp::Client<edu_robot::srv::SetMode>& service_client)
 {
   auto request = std::make_shared<edu_robot::srv::SetMode::Request>();
-  request->mode.mode = edu_robot::msg::Mode::FLEET;
+  request->mode.mode = edu_robot::msg::Mode::AUTONOMOUS;
 
   RCLCPP_INFO(node.get_logger(), "Switch to fleet drive mode.");
   service_client.async_send_request(
