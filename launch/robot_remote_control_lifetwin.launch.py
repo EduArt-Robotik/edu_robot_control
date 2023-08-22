@@ -20,8 +20,8 @@ def generate_launch_description():
     ])
 
     joy_node = Node(
-      package='joy',
-      executable='joy_node',
+      package='joy_linux',
+      executable='joy_linux_node',
       parameters=[
         {'autorepeat_rate': 20.0},
         {'coalesce_interval_ms' : 50}
@@ -33,6 +33,9 @@ def generate_launch_description():
       package='edu_robot_control',
       executable='remote_control',
       parameters=[parameter_file],
+      remappings=[
+        ('cmd_vel', 'cmd_vel_not_used')
+      ],
       namespace=EnvironmentVariable('EDU_ROBOT_NAMESPACE', default_value="eduard")
     )
 

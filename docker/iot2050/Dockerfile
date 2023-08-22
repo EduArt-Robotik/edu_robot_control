@@ -1,53 +1,16 @@
-FROM ros:humble-ros-base-jammy
+FROM eduartrobotik/eduart-robot-control:0.3.0
 
 # using bash
 SHELL ["/bin/bash", "-c"]
-ENV ROS_DISTRO humble
 ENV USER user
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN \
-    apt-get update \
-    && apt-get install -y software-properties-common
+COPY ./iot_cyclone_dds_profile.xml /home/$USER/
 
-# install Joystick Driver for ROS2 foxy
-RUN sudo apt-get install -y \
-    ros-$ROS_DISTRO-rmw-fastrtps-cpp \
-    ros-$ROS_DISTRO-fastrtps
-
-# write source commands to .bashrc -> no need to source afterwards
-RUN \
-########################################################
-# Add non root user for development.
-    useradd --create-home --shell /bin/bash $USER \
-    && echo "$USER ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers \
-    && /sbin/usermod -aG sudo $USER \
-########################################################
-# Add exports and sources to bash rc for easy handling.
-    && echo "export RMW_IMPLEMENTATION=rmw_fastrtps_cpp" >> /home/$USER/.bashrc \
-    # && echo "export FASTRTPS_DEFAULT_PROFILES_FILE=/home/$USER/fastrtps_profile.xml" >> /home/$USER/.bashrc \
-    && echo "source /opt/ros/$ROS_DISTRO/setup.bash" >> /home/$USER/.bashrc \
-    && echo "source /home/$USER/iotbot_ws/install/setup.bash" >> /home/$USER/.bashrc \
-########################################################
-# Clean up
-    && apt-get clean
-
-# set up iotbot workspace
-RUN mkdir -p /home/$USER/iotbot_ws/src/iotbot
-
-COPY ./edu_robot /home/$USER/iotbot_ws/src/edu_robot
-COPY ./edu_robot_control /home/$USER/iotbot_ws/src/edu_robot_control
-COPY ./joystick_drivers /home/$USER/iotbot_ws/src/joystick_drivers
-
-WORKDIR /home/$USER/iotbot_ws
-
-# build EduArt packages nodes
-RUN export RMW_IMPLEMENTATION=rmw_fastrtps_cpp \
-    && source /opt/ros/$ROS_DISTRO/setup.bash \
-    && MAKEFLAGS="-j1" colcon build --symlink-install --executor sequential --event-handlers console_direct+ --cmake-args -DCMAKE_BUILD_TYPE=Release
+ENV CYCLONEDDS_URI=/home/$USER/iot_cyclone_dds_profile.xml
 
 # launch control node and joy interpreter
-CMD export RMW_IMPLEMENTATION=rmw_fastrtps_cpp \
+CMD echo "launching eduard iot2050 robot control software" \
     && source /opt/ros/$ROS_DISTRO/setup.bash \
-    && source /home/user/iotbot_ws/install/setup.bash \  
-    && ros2 launch edu_robot_control robot_remote_control.launch.py
+    && source /home/user/ros/install/setup.bash \  
+    && ros2 launch edu_robot_control robot_remote_control_iot2050.launch.py

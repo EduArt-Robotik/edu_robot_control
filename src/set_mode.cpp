@@ -9,25 +9,25 @@ std::string get_mode_string(const edu_robot::msg::Mode mode)
 {
   std::string mode_string;
 
-  if (mode.value & edu_robot::msg::Mode::INACTIVE) {
+  if (mode.mode & edu_robot::msg::Mode::INACTIVE) {
     mode_string += "INACTIVE|";
   }
-  if (mode.value & edu_robot::msg::Mode::REMOTE_CONTROLLED) {
+  if (mode.mode & edu_robot::msg::Mode::REMOTE_CONTROLLED) {
     mode_string += "REMOTE CONTROLLED|";
   }
-  if (mode.value & edu_robot::msg::Mode::FLEET) {
+  if (mode.mode & edu_robot::msg::Mode::FLEET) {
     mode_string += "FLEET|";
   }
-  if (mode.value & edu_robot::msg::Mode::COLLISION_AVOIDANCE_OVERRIDE_ENABLED) {
-    mode_string += "COLLISION_AVOIDANCE_OVERRIDE_ENABLED|";
+  if (mode.feature_mode & edu_robot::msg::Mode::COLLISION_AVOIDANCE) {
+    mode_string += "COLLISION_AVOIDANCE|";
   }
-  if (mode.value & edu_robot::msg::Mode::COLLISION_AVOIDANCE_OVERRIDE_DISABLED) {
-    mode_string += "COLLISION_AVOIDANCE_OVERRIDE_DISABLED|";
+  if (mode.feature_mode & edu_robot::msg::Mode::COLLISION_AVOIDANCE_OVERRIDE) {
+    mode_string += "COLLISION_AVOIDANCE_OVERRIDE|";
   }  
-  if (mode.value & edu_robot::msg::Mode::SKID_DRIVE) {
+  if (mode.drive_kinematic & edu_robot::msg::Mode::SKID_DRIVE) {
     mode_string += "SKID_DRIVE|";
   }
-  if (mode.value & edu_robot::msg::Mode::MECANUM_DRIVE) {
+  if (mode.drive_kinematic & edu_robot::msg::Mode::MECANUM_DRIVE) {
     mode_string += "MECANUM_DRIVE|";
   }
 
@@ -41,7 +41,7 @@ std::string get_mode_string(const edu_robot::msg::Mode mode)
 void disable(rclcpp::Node& node, rclcpp::Client<edu_robot::srv::SetMode>& service_client)
 {
   auto request = std::make_shared<edu_robot::srv::SetMode::Request>();
-  request->mode.value = edu_robot::msg::Mode::INACTIVE;
+  request->mode.mode = edu_robot::msg::Mode::INACTIVE;
 
   RCLCPP_INFO(node.get_logger(), "Send set mode request mode = INACTIVE.");
   service_client.async_send_request(
@@ -49,7 +49,7 @@ void disable(rclcpp::Node& node, rclcpp::Client<edu_robot::srv::SetMode>& servic
     [logger = node.get_logger()](ResponseFuture future) {
       const auto response = future.get();
 
-      if ((response.second->state.mode.value & response.first->mode.value) == false) {
+      if ((response.second->state.mode.mode & response.first->mode.mode) == false) {
         RCLCPP_ERROR_STREAM(logger, "Can't disable robot! Robot is in mode = " << get_mode_string(response.second->state.mode));
         return;
       }
@@ -63,7 +63,7 @@ void disable(rclcpp::Node& node, rclcpp::Client<edu_robot::srv::SetMode>& servic
 void enable(rclcpp::Node& node, rclcpp::Client<edu_robot::srv::SetMode>& service_client)
 {
   auto request = std::make_shared<edu_robot::srv::SetMode::Request>();
-  request->mode.value = edu_robot::msg::Mode::REMOTE_CONTROLLED;
+  request->mode.mode = edu_robot::msg::Mode::REMOTE_CONTROLLED;
 
   RCLCPP_INFO(node.get_logger(), "Send set mode request mode = REMOTE_CONTROLLED.");
   service_client.async_send_request(
@@ -71,7 +71,7 @@ void enable(rclcpp::Node& node, rclcpp::Client<edu_robot::srv::SetMode>& service
     [logger = node.get_logger()](ResponseFuture future) {
       const auto response = future.get();
 
-      if ((response.second->state.mode.value & response.first->mode.value) == false) {
+      if ((response.second->state.mode.mode & response.first->mode.mode) == false) {
         RCLCPP_ERROR_STREAM(logger, "Can't enable robot! Robot is in mode = " << get_mode_string(response.second->state.mode));
         return;
       }
@@ -85,7 +85,7 @@ void enable(rclcpp::Node& node, rclcpp::Client<edu_robot::srv::SetMode>& service
 void switch_to_skid_kinematic(rclcpp::Node& node, rclcpp::Client<edu_robot::srv::SetMode>& service_client)
 {
   auto request = std::make_shared<edu_robot::srv::SetMode::Request>();
-  request->mode.value = edu_robot::msg::Mode::SKID_DRIVE;
+  request->mode.drive_kinematic = edu_robot::msg::Mode::SKID_DRIVE;
 
   RCLCPP_INFO(node.get_logger(), "Switch to skid drive kinematic.");
   service_client.async_send_request(
@@ -93,7 +93,7 @@ void switch_to_skid_kinematic(rclcpp::Node& node, rclcpp::Client<edu_robot::srv:
     [logger = node.get_logger()](ResponseFuture future) {
       const auto response = future.get();
 
-      if ((response.second->state.mode.value & response.first->mode.value) == false) {
+      if ((response.second->state.mode.drive_kinematic & response.first->mode.drive_kinematic) == false) {
         RCLCPP_ERROR_STREAM(logger, "Can't switch to skid drive kinematic! Robot is in mode = "
                                     << get_mode_string(response.second->state.mode));
         return;
@@ -108,7 +108,7 @@ void switch_to_skid_kinematic(rclcpp::Node& node, rclcpp::Client<edu_robot::srv:
 void switch_to_mecanum_kinematic(rclcpp::Node& node, rclcpp::Client<edu_robot::srv::SetMode>& service_client)
 {
   auto request = std::make_shared<edu_robot::srv::SetMode::Request>();
-  request->mode.value = edu_robot::msg::Mode::MECANUM_DRIVE;
+  request->mode.drive_kinematic = edu_robot::msg::Mode::MECANUM_DRIVE;
 
   RCLCPP_INFO(node.get_logger(), "Switch to mecanum drive kinematic.");
   service_client.async_send_request(
@@ -116,7 +116,7 @@ void switch_to_mecanum_kinematic(rclcpp::Node& node, rclcpp::Client<edu_robot::s
     [logger = node.get_logger()](ResponseFuture future) {
       const auto response = future.get();
 
-      if ((response.second->state.mode.value & response.first->mode.value) == false) {
+      if ((response.second->state.mode.drive_kinematic & response.first->mode.drive_kinematic) == false) {
         RCLCPP_ERROR_STREAM(logger, "Can't switch to mecanum drive kinematic! Robot is in mode = "
                                     << get_mode_string(response.second->state.mode));
         return;
@@ -132,7 +132,7 @@ void enable_fleet_drive(
   rclcpp::Node& node, rclcpp::Client<edu_robot::srv::SetMode>& service_client)
 {
   auto request = std::make_shared<edu_robot::srv::SetMode::Request>();
-  request->mode.value = edu_robot::msg::Mode::FLEET;
+  request->mode.mode = edu_robot::msg::Mode::FLEET;
 
   RCLCPP_INFO(node.get_logger(), "Switch to fleet drive mode.");
   service_client.async_send_request(
@@ -140,7 +140,7 @@ void enable_fleet_drive(
     [logger = node.get_logger()](ResponseFuture future) {
       const auto response = future.get();
 
-      if ((response.second->state.mode.value & response.first->mode.value) == false) {
+      if ((response.second->state.mode.mode & response.first->mode.mode) == false) {
         RCLCPP_ERROR_STREAM(logger, "Can't switch to fleet drive mode! Robot is in mode = "
                                     << get_mode_string(response.second->state.mode));
         return;
@@ -160,7 +160,7 @@ void disable_fleet_drive(rclcpp::Node& node, rclcpp::Client<edu_robot::srv::SetM
 void enable_collision_avoidance_override(rclcpp::Node& node, rclcpp::Client<edu_robot::srv::SetMode>& service_client)
 {
   auto request = std::make_shared<edu_robot::srv::SetMode::Request>();
-  request->mode.value = edu_robot::msg::Mode::COLLISION_AVOIDANCE_OVERRIDE_ENABLED;
+  request->mode.feature_mode = edu_robot::msg::Mode::COLLISION_AVOIDANCE_OVERRIDE;
 
   RCLCPP_INFO(node.get_logger(), "Override collision avoidance.");
   service_client.async_send_request(
@@ -168,7 +168,7 @@ void enable_collision_avoidance_override(rclcpp::Node& node, rclcpp::Client<edu_
     [logger = node.get_logger()](ResponseFuture future) {
       const auto response = future.get();
 
-      if ((response.second->state.mode.value & response.first->mode.value) == false) {
+      if ((response.second->state.mode.feature_mode & response.first->mode.feature_mode) == false) {
         RCLCPP_ERROR_STREAM(logger, "Can't override collision avoidance! Robot is in mode = "
                                     << get_mode_string(response.second->state.mode));
         return;
@@ -183,15 +183,14 @@ void enable_collision_avoidance_override(rclcpp::Node& node, rclcpp::Client<edu_
 void disable_collision_avoidance_override(rclcpp::Node& node, rclcpp::Client<edu_robot::srv::SetMode>& service_client)
 {
   auto request = std::make_shared<edu_robot::srv::SetMode::Request>();
-  request->mode.value = edu_robot::msg::Mode::COLLISION_AVOIDANCE_OVERRIDE_DISABLED;
+  request->disable_feature = edu_robot::msg::Mode::COLLISION_AVOIDANCE_OVERRIDE;
 
   RCLCPP_INFO(node.get_logger(), "Disable overriding of collision avoidance.");
   service_client.async_send_request(
     request,
     [logger = node.get_logger()](ResponseFuture future) {
       const auto response = future.get();
-
-      if ((response.second->state.mode.value & response.first->mode.value) == false) {
+      if ((response.second->state.mode.feature_mode & response.first->disable_feature) != 0) {
         RCLCPP_ERROR_STREAM(logger, "Can't disable overriding of collision avoidance! Robot is in mode = "
                                     << get_mode_string(response.second->state.mode));
         return;
