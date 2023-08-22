@@ -25,16 +25,93 @@ With the provided ROS remote control node a gamepad or joystick can be used for 
 | [3]       | Triangle      | 0             | 0 or 1        | Light pattern: Operation
 | [4]       | L1            | 0             | 0 or 1        | Light pattern: Turning left
 | [5]       | R1            | 0             | 0 or 1        | Light pattern: Turning right
-| [6]       | L2            | 0             | 0 or 1        | Enable Fleet Drive
+| [6]       | L2            | 0             | 0 or 1        | Switch into mode AUTONOMOUS (drives will be enabled and robot will subscribe to topic "autonomous/cmd_vel")
 | [7]       | R2            | 0             | 0 or 1        | Override collision avoidance
 | [8]       | SHARE         | 0             | 0 or 1        | Disable driving
-| [9]       | OPTIONS       | 0             | 0 or 1        | Enable driving
+| [9]       | OPTIONS       | 0             | 0 or 1        | Switch into mode REMOTE_CONTROLLED (drives will be enabled and robot will subscribe to topic "cmd_vel")
 | [10]      | PS            | 0             | 0 or 1        | Connect Controller to Eduard
 | [11]      | L3            | 0             | 0 or 1        | not in use
 | [12]      | R3            | 0             | 0 or 1        | not in use
 | [13]      | Map           | 0             | 0 or 1        | Light pattern: Warning light
 
 and is defined in the parameter file "remote_control.yaml" located in the folder "parameter". Of course it can be reassigned to your needs.
+
+## Deploying
+
+A Docker container is used to run this software on our robots. Normally, all our robots are shipped with a Docker container registered to start after a reboot. If you want to deploy a newer version, or whatever the reason, make sure to remove the previously deployed container. To check which containers are running, use the following command:
+
+```bash
+docker container ls 
+```
+A typically print out looks like:
+
+```bash
+CONTAINER ID   IMAGE                      COMMAND                  CREATED      STATUS          PORTS     NAMES
+46c8590424c0   eduard-iotbot:0.2.1-beta   "/ros_entrypoint.sh …"   6 days ago   Up 21 minutes             eduard-iotbot-0.2.1-beta
+```
+
+To stop and remove the container, use the following command with the container ID displayed by the above command:
+
+```bash
+docker stop <container id>
+docker rm <container id>
+```
+
+## Deploying on IoT2050
+
+### Use Prebuilt Docker Images
+
+The easiest way, and one that is usually quite sufficient, is to use a prebuilt Docker image. All released versions of edu_robot software are usually available. 
+
+The following command deploys and starts the image. Note: please make sure that the robot has internet connection. It is considered that the official ["Example Image V1.3.1"](https://support.industry.siemens.com/cs/document/109741799/downloads-f%C3%BCr-simatic-iot20x0?dti=0&lc=de-DE) provided by Siemens will be used for the IoT2050. If this is not the case it cloud lead in a misinterpretation of the game pad.
+
+We provide a docker compose file for the IoT2050. Either [download the file](docker/iot2050/docker-compose.yaml) on IoT2050 or clone the repository and navigate to the file:
+
+```bash
+git clone https://github.com/EduArt-Robotik/edu_robot.git
+cd edu_robot_control/docker/iot2050
+```
+
+Then execute following command inside the folder where the ["docker-compose.yaml"](docker/iot2050/docker-compose.yaml) is located:
+
+```bash
+docker compose up
+```
+
+Inside the docker compose file a namespace is defined. This namespace can freely be modified. We recommend to reflect the robot color with this namespace. But in general do it like you want.
+
+The docker container can be removed by the command:
+
+```bash
+docker compose down
+```
+
+executed at the location of the docker compose file. This has to be done if a newer version should be deployed.
+
+## Deploying on IPC127e
+
+The easiest way, and one that is usually quite sufficient, is to use a prebuilt Docker image. All released versions of edu_robot software are usually available. 
+
+```bash
+git clone https://github.com/EduArt-Robotik/edu_robot.git
+cd edu_robot_control/docker/ipc127e
+```
+
+Then execute following command inside the folder where the ["docker-compose.yaml"](docker/ipc127e/docker-compose.yaml) is located:
+
+```bash
+docker compose up
+```
+
+Inside the docker compose file a namespace is defined. This namespace can freely be modified. We recommend to reflect the robot color with this namespace. But in general do it like you want.
+
+The docker container can be removed by the command:
+
+```bash
+docker compose down
+```
+
+executed at the location of the docker compose file. This has to be done if a newer version should be deployed.
 
 ## Setting up your Joystick
 
@@ -69,23 +146,6 @@ $ scan on
 
 The connection process so far should look like this. Your joystick is now recognised as a wireless controller. Copy the MAC address of the device for the rest of the procedure.
 
-```console
-root@iot2050-debian:~# bluetoothctl
-Agent registered
-[bluetooth] # agent on
-Agent is already registered
-[bluetooth] # power on
-Changing the power on succeeded
-[bluetooth] # discoverable on
-Changing discoverable on succeeded
-[CHG] Controller XX:XX:XX:XX:XX:XX Discoverable: yes
-[bluetooth] # pairable on
-Discovery started
-[CHG] Controller XX:XX:XX:XX:XX:XX Discovering:yes
-[NEW] Device XX:XX:XX:XX:XX:XX Wireless Controller
-[bluetooth] # 
-```
-
 Connect the controller using the following commands and its MAC address. If needed, press the PlayStation button again when the light signals stop flashing.
 
 ```console
@@ -96,105 +156,6 @@ $ exit
 ```
 
 NOTE: These steps are only required once at the very beginning. From now on, when the PS button is pressed, the joystick should automatically connect to the IOT2050 once it has successfully booted up. These operations are only then necessary again if the controller has been connected to another device in the meantime.
-
-
-## Deploying
-
-A Docker container is used to run this software on our robots. Normally, all our robots are shipped with a Docker container registered to start after a reboot. If you want to deploy a newer version, or whatever the reason, make sure to remove the previously deployed container. To check which containers are running, use the following command:
-
-```bash
-docker container ls 
-```
-A typically print out looks like:
-
-```bash
-CONTAINER ID   IMAGE                      COMMAND                  CREATED      STATUS          PORTS     NAMES
-46c8590424c0   eduard-iotbot:0.2.1-beta   "/ros_entrypoint.sh …"   6 days ago   Up 21 minutes             eduard-iotbot-0.2.1-beta
-```
-
-To stop and remove the container, use the following command with the container ID displayed by the above command:
-
-```bash
-docker stop <container id>
-docker rm <container id>
-```
-
-## Deploying on IoT2050
-
-| WARNING: the current deployment requires an ascii joystick device, because the SDL library used by the ROS joy node makes trouble in ROS humble. The ascii joystick device is disabled in the current kernel available on the Siemens webpage. Please either use an joystick ROS node without that requirement or use an kernel with "CONFIG_INPUT_JOYDEV" enabled. We will provide an downloadable image soon including installed EduArt software. If you need this image now, please contact [Christian Wendt](mailto:chrisitan.wendt@eduart-robotik.com).|
-| --- |
-
-This section describes how the software is deployed on an IoT2050 in a Docker environment. First clone the repository on the robot by executing this command:
-
-```bash
-git clone https://github.com/EduArt-Robotik/edu_robot_control.git
-```
-
-Then navigate into the docker folder in the cloned repository:
-
-```bash
-cd edu_robot_control/docker/iot2050
-```
-
-Using make the Docker image can be build:
-
-```bash
-make all
-make clean
-```
-
-Note: this could take some while, ~40min.
-
-After executing these command a new Docker image with the name "eduard-robot-control:0.2.0" should be created. It can be checked by following command:
-
-```bash
-docker image ls
-```
-
-The docker container can easily started by the command:
-
-```bash
-docker run --user user --name eduard-robot-control-0.2.0 --restart=always --privileged -v /dev:/dev --net=host --pid=host --ipc=host --env EDU_ROBOT_NAMESPACE=eduard/red eduard-robot-control:0.2.0
-```
-
-With the flag "--restart=always" the container will come up after rebooting the system. If this is not wanted please remove this flag. The flag "-env EDU_ROBOT_NAMESPACE=" defines the used namespace by this robot. In this example "eduard/red" was used. Please update the namespace according your needs.
-
-## Deploying on IPC127e
-
-This section describes how the software is deployed on an IPC127e in a Docker environment. First clone the repository on the robot by executing this command:
-
-```bash
-git clone https://github.com/EduArt-Robotik/edu_robot_control.git
-```
-
-Then navigate into the docker folder in the cloned repository:
-
-```bash
-cd edu_robot/docker/ipc127e
-```
-
-Using make the Docker image can be build:
-
-```bash
-make all
-make clean
-```
-
-Note: this could take some while, ~10min.
-
-After executing these command a new Docker image with the name "eduard-robot-control:0.2.0" should be created. It can be checked by following command:
-
-```bash
-docker image ls
-```
-
-The docker container can easily started by the command:
-
-```bash
-docker run --user user --name eduard-robot-control-0.2.0 --restart=always --privileged -v /dev:/dev --net=host --pid=host --ipc=host --env EDU_ROBOT_NAMESPACE=eduard/red eduard-robot-control:0.2.0
-```
-
-With the flag "--restart=always" the container will come up after rebooting the system. If this is not wanted please remove this flag. The flag "-env EDU_ROBOT_NAMESPACE=" defines the used namespace by this robot. In this example "eduard/red" was used. Please update the namespace according your needs.
 
 
 # Monitoring Eduard using RViz

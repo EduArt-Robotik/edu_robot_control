@@ -1,4 +1,4 @@
-FROM eduartrobotik/eduart-robot-control:0.3.0
+FROM eduartrobotik/eduart-robot-control:0.3.1
 
 # using bash
 SHELL ["/bin/bash", "-c"]
@@ -13,4 +13,5 @@ ENV CYCLONEDDS_URI=/home/$USER/iot_cyclone_dds_profile.xml
 CMD echo "launching eduard iot2050 robot control software" \
     && source /opt/ros/$ROS_DISTRO/setup.bash \
     && source /home/user/ros/install/setup.bash \  
+    && export RMW_IMPLEMENTATION=rmw_fastrtps_cpp \    
     && ros2 launch edu_robot_control robot_remote_control_iot2050.launch.py
