@@ -1,4 +1,7 @@
-image_name = eduard-robot-control-iotbot:0.3.0
+image_name = eduard-robot-control-iotbot:0.3.1
+
+download-sources:
+	git clone --branch feature/reduce_complexity_for_stable_processing_dt https://github.com/EduArt-Robotik/joystick_drivers.git
 
 build-docker:
 	docker build -t $(image_name) .
