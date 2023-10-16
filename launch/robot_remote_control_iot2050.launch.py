@@ -23,8 +23,7 @@ def generate_launch_description():
       package='joy',
       executable='joy_node',
       parameters=[
-        {'autorepeat_rate': 20.0},
-        {'coalesce_interval_ms' : 1}
+        {'rate': 20.0}
       ],
       namespace=EnvironmentVariable('EDU_ROBOT_NAMESPACE', default_value="eduard")
     )
