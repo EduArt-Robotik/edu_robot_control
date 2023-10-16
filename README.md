@@ -59,6 +59,8 @@ docker rm <container id>
 
 ## Deploying on IoT2050
 
+>Note: If you are using [edu_robot](https://github.com/EduArt-Robotik/edu_robot), it is not necessary to install **edu_robot_control**. It is already supplied with **edu_robot**.
+
 ### Use Prebuilt Docker Images
 
 The easiest way, and one that is usually quite sufficient, is to use a prebuilt Docker image. All released versions of edu_robot software are usually available. 
@@ -89,6 +91,8 @@ docker compose down
 executed at the location of the docker compose file. This has to be done if a newer version should be deployed.
 
 ## Deploying on IPC127e
+
+>Note: If you are using [edu_robot](https://github.com/EduArt-Robotik/edu_robot), it is not necessary to install **edu_robot_control**. It is already supplied with **edu_robot**.
 
 The easiest way, and one that is usually quite sufficient, is to use a prebuilt Docker image. All released versions of edu_robot software are usually available. 
 
