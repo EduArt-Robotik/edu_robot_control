@@ -4,15 +4,14 @@ Panels:
     Name: Displays
     Property Tree Widget:
       Expanded:
-        - /Grid1
-        - /Range Front Left1/Topic1
+        - /Global Options1
         - /Range Front Right1/Topic1
         - /Range Rear Left1/Topic1
         - /Range Rear Right1/Topic1
-        - /RobotModel1
+        - /RobotModel1/Status1
         - /RobotModel1/Description Topic1
-      Splitter Ratio: 0.5295566320419312
-    Tree Height: 1085
+      Splitter Ratio: 0.6147540807723999
+    Tree Height: 731
   - Class: rviz_common/Selection
     Name: Selection
   - Class: rviz_common/Tool Properties
@@ -64,7 +63,7 @@ Visualization Manager:
         Filter size: 10
         History Policy: Keep Last
         Reliability Policy: Best Effort
-        Value: /eduard/red/range/front/left/range
+        Value: range/front/left/range
       Value: true
     - Alpha: 0.10000000149011612
       Buffer Length: 1
@@ -78,7 +77,7 @@ Visualization Manager:
         Filter size: 10
         History Policy: Keep Last
         Reliability Policy: Best Effort
-        Value: /eduard/red/range/front/right/range
+        Value: range/front/right/range
       Value: true
     - Alpha: 0.10000000149011612
       Buffer Length: 1
@@ -92,7 +91,7 @@ Visualization Manager:
         Filter size: 10
         History Policy: Keep Last
         Reliability Policy: Best Effort
-        Value: /eduard/red/range/rear/left/range
+        Value: range/rear/left/range
       Value: true
     - Alpha: 0.10000000149011612
       Buffer Length: 1
@@ -106,65 +105,22 @@ Visualization Manager:
         Filter size: 10
         History Policy: Keep Last
         Reliability Policy: Best Effort
-        Value: /eduard/red/range/rear/right/range
+        Value: range/rear/right/range
       Value: true
     - Class: rviz_default_plugins/TF
-      Enabled: true
+      Enabled: false
       Frame Timeout: 15
       Frames:
         All Enabled: true
-        eduard/red/base_footprint:
-          Value: true
-        eduard/red/base_link:
-          Value: true
-        eduard/red/imu/base:
-          Value: true
-        eduard/red/odom:
-          Value: true
-        eduard/red/range/front/left:
-          Value: true
-        eduard/red/range/front/right:
-          Value: true
-        eduard/red/range/rear/left:
-          Value: true
-        eduard/red/range/rear/right:
-          Value: true
-        eduard/red/wheel_front_left:
-          Value: true
-        eduard/red/wheel_front_right:
-          Value: true
-        eduard/red/wheel_rear_left:
-          Value: true
-        eduard/red/wheel_rear_right:
-          Value: true
       Marker Scale: 0.30000001192092896
       Name: TF
       Show Arrows: true
       Show Axes: true
       Show Names: true
       Tree:
-        eduard/red/odom:
-          eduard/red/base_footprint:
-            eduard/red/imu/base:
-              eduard/red/base_link:
-                eduard/red/range/front/left:
-                  {}
-                eduard/red/range/front/right:
-                  {}
-                eduard/red/range/rear/left:
-                  {}
-                eduard/red/range/rear/right:
-                  {}
-                eduard/red/wheel_front_left:
-                  {}
-                eduard/red/wheel_front_right:
-                  {}
-                eduard/red/wheel_rear_left:
-                  {}
-                eduard/red/wheel_rear_right:
-                  {}
+        {}
       Update Interval: 0
-      Value: true
+      Value: false
     - Alpha: 1
       Class: rviz_default_plugins/RobotModel
       Collision Enabled: false
@@ -183,27 +139,27 @@ Visualization Manager:
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
-        eduard/red/base_link:
+        eduard/base_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        eduard/red/wheel_front_left:
+        eduard/wheel_front_left:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        eduard/red/wheel_front_right:
+        eduard/wheel_front_right:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        eduard/red/wheel_rear_left:
+        eduard/wheel_rear_left:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        eduard/red/wheel_rear_right:
+        eduard/wheel_rear_right:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -219,7 +175,7 @@ Visualization Manager:
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
-    Fixed Frame: eduard/red/base_footprint
+    Fixed Frame: eduard/base_link
     Frame Rate: 30
   Name: root
   Tools:
@@ -262,7 +218,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 2.936803102493286
+      Distance: 1.4891066551208496
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -277,18 +233,18 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 1.3447966575622559
+      Pitch: 1.0947964191436768
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 3.1622812747955322
+      Yaw: 3.1141133308410645
     Saved: ~
 Window Geometry:
   Displays:
     collapsed: false
-  Height: 1376
+  Height: 1022
   Hide Left Dock: false
   Hide Right Dock: true
-  QMainWindow State: 000000ff00000000fd000000040000000000000198000004c6fc0200000008fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005c00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000003b000004c6000000c700fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261000000010000010f000006c1fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073000000003b000006c1000000a000fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e1000001970000000300000a000000003efc0100000002fb0000000800540069006d0065010000000000000a000000025300fffffffb0000000800540069006d0065010000000000000450000000000000000000000862000004c600000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd00000004000000000000017000000364fc0200000008fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005c00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000003b00000364000000c700fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261000000010000010f000006c1fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073000000003b000006c1000000a000fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000007800000003efc0100000002fb0000000800540069006d00650100000000000007800000025300fffffffb0000000800540069006d006501000000000000045000000000000000000000060a0000036400000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Selection:
     collapsed: false
   Time:
@@ -297,6 +253,6 @@ Window Geometry:
     collapsed: false
   Views:
     collapsed: true
-  Width: 2560
-  X: 1080
-  Y: 27
+  Width: 1920
+  X: 1473
+  Y: 101
