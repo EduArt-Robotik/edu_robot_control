@@ -6,6 +6,7 @@ from launch import LaunchDescription
 from launch_ros.actions import Node
 from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.substitutions import Command, LaunchConfiguration, EnvironmentVariable, PathJoinSubstitution
 
 def generate_launch_description():
     # RViz Config
@@ -16,6 +17,7 @@ def generate_launch_description():
       package='rviz2',
       executable='rviz2',
       name='rviz2',
+      namespace=EnvironmentVariable('EDU_ROBOT_NAMESPACE', default_value="eduard"),
       arguments=['-d', rviz_config]
     )
 
