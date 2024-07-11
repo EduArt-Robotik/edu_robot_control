@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="$(arg robot_name)">
+  <xacro:arg name="robot_name" default="arthus"/>
+
+  <!-- Chassis -->
+  <link name="$(arg robot_name)/base_link">
+    <visual>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <geometry>
+          <mesh filename="package://edu_robot_control/model/mesh/arthur.dae"/>
+        </geometry>
+    </visual>
+  </link>
+</robot>
