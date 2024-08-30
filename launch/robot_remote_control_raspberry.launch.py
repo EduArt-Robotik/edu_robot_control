@@ -25,7 +25,7 @@ def generate_launch_description():
       parameters=[
         {'autorepeat_rate': 20.0},
         {'coalesce_interval_ms': 50},
-        {'dev': '/dev/input/js1'}
+        {'dev': '/dev/input/js0'}
       ],
       namespace=EnvironmentVariable('EDU_ROBOT_NAMESPACE', default_value="eduard")
     )
