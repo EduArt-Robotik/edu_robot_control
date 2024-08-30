@@ -20,7 +20,7 @@ ENV CYCLONEDDS_URI=/home/$USER/ipc_cyclone_dds_profile.xml
 
 # add entry point
 COPY --chown=$USER ./entrypoint /home/$USER/
-RUN sudo chmod a+x /home/$USER/entrypoint
+RUN chmod a+x /home/$USER/entrypoint
 ENTRYPOINT [ "/home/user/entrypoint" ]
 
 # launch control node and joy interpreter
