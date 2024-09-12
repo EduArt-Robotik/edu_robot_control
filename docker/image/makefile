@@ -1,7 +1,7 @@
-image_name = eduart-robot-control:0.3.3
+image_name = eduart-robot-control:0.4.0
 
 download-sources:
-	git clone --branch 0.3.3 https://github.com/EduArt-Robotik/edu_robot_control.git
+	git clone --branch 0.4.0 https://github.com/EduArt-Robotik/edu_robot_control.git
 
 build-docker:
 	docker build -t $(image_name) .

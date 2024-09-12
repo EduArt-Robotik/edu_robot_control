@@ -1,13 +1,14 @@
-FROM eduartrobotik/eduart-robot:0.4.2
+FROM eduartrobotik/eduart-robot:0.5.0
 
 ENV USER user
 ENV DEBIAN_FRONTEND=noninteractive
+ENV ROS_DISTRO=jazzy
 
 USER root
 RUN apt-get update \
     && apt-get install -y \
-        ros-humble-rviz2 \
-        ros-humble-xacro
+        ros-$ROS_DISTRO-rviz2 \
+        ros-$ROS_DISTRO-xacro
 
 
 # work with user user
