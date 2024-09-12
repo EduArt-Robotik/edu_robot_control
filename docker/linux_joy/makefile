@@ -1,4 +1,4 @@
-image_name = eduard-robot-control-ipcbot:0.3.1
+image_name = eduard-robot-control-linux-joy:0.4.0
 
 build-docker:
 	docker build -t $(image_name) .

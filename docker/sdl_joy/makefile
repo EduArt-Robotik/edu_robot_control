@@ -1,4 +1,4 @@
-image_name = eduard-robot-control-iotbot:0.3.1
+image_name = eduard-robot-control-sdl-joy:0.4.0
 
 download-sources:
 	git clone --branch feature/reduce_complexity_for_stable_processing_dt https://github.com/EduArt-Robotik/joystick_drivers.git
@@ -12,4 +12,3 @@ build-multiarch-and-push:
 upload-docker:
 	docker tag $(image_name) eduartrobotik/$(image_name)
 	docker push eduartrobotik/$(image_name)
-

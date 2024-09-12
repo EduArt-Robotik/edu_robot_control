@@ -1,8 +1,8 @@
-FROM eduartrobotik/eduart-robot-control:0.3.1
+FROM eduartrobotik/eduart-robot-control:0.4.0
 
 # using bash
 SHELL ["/bin/bash", "-c"]
-ENV ROS_DISTRO humble
+ENV ROS_DISTRO jazzy
 ENV USER user
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -12,11 +12,6 @@ RUN apt-get update \
     && apt-get install -y ros-$ROS_DISTRO-joy-linux
 
 USER $USER
-
-# in case cyclone is used this profile is needed
-COPY ./ipc_cyclone_dds_profile.xml /home/$USER/
-COPY ./ie_app_cyclone_dds_profile.xml /home/$USER/
-ENV CYCLONEDDS_URI=/home/$USER/ipc_cyclone_dds_profile.xml
 
 # add entry point
 COPY --chown=$USER ./entrypoint /home/$USER/

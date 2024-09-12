@@ -2,8 +2,8 @@ version: "3.0"
 
 services:
     arthur-monitor:
-        image: eduartrobotik/eduart-robot-control:0.3.3
-        container_name: arthur-monitor-0.3.3
+        image: eduartrobotik/eduart-robot-control:0.4.0
+        container_name: arthur-robot-control-0.4.0
         user: user
         restart: always
         privileged: true

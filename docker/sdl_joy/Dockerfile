@@ -1,8 +1,8 @@
-FROM eduartrobotik/eduart-robot-control:0.3.1
+FROM eduartrobotik/eduart-robot-control:0.4.0
 
 # using bash
 SHELL ["/bin/bash", "-c"]
-ENV ROS_DISTRO humble
+ENV ROS_DISTRO jazzy
 ENV USER user
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -19,13 +19,9 @@ RUN source /opt/ros/$ROS_DISTRO/setup.bash \
     && source /home/$USER/.bashrc \
     && colcon build --packages-select joy --symlink-install --executor sequential --event-handlers console_direct+ --cmake-args -DCMAKE_BUILD_TYPE=Release
 
-# in case cyclone is used this profile is needed
-COPY ./iot_cyclone_dds_profile.xml /home/$USER/
-ENV CYCLONEDDS_URI=/home/$USER/iot_cyclone_dds_profile.xml
-
 # add entry point
 COPY --chown=$USER ./entrypoint /home/$USER/
-RUN sudo chmod a+x /home/$USER/entrypoint
+RUN chmod a+x /home/$USER/entrypoint
 ENTRYPOINT [ "/home/user/entrypoint" ]
 
 # launch control node and joy interpreter
