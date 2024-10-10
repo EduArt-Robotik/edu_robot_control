@@ -2,23 +2,22 @@ import os
 
 from ament_index_python.packages import get_package_share_path
 
-from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument
+from launch import LaunchDescription, LaunchContext
+from launch.actions import DeclareLaunchArgument, OpaqueFunction
 from launch.conditions import IfCondition, UnlessCondition
-from launch.substitutions import Command, LaunchConfiguration, EnvironmentVariable, TextSubstitution
+from launch.substitutions import Command, LaunchConfiguration, EnvironmentVariable, TextSubstitution, PathJoinSubstitution
 
 from launch_ros.actions import Node
 from launch_ros.parameter_descriptions import ParameterValue
+from launch_ros.substitutions import FindPackageShare
 
 import xacro
 
-def generate_launch_description():
-    package_path = get_package_share_path('edu_robot_control')
-    model_path = os.path.join(package_path, 'model/urdf')
-    urdf_eduard_model_path = os.path.join(model_path, 'eduard.urdf')
-
-    robot_name = os.getenv('EDU_ROBOT_NAMESPACE', default='eduard')
-    wheel_type = os.getenv('EDU_ROBOT_WHEEL_TYPE', default='mecanum')
+def generate_robot_model(context: LaunchContext, robot_name_arg: LaunchConfiguration, wheel_type_arg: LaunchConfiguration,
+                         urdf_eduard_model_path_arg: PathJoinSubstitution) -> str:
+    robot_name = robot_name_arg.perform(context)
+    wheel_type = wheel_type_arg.perform(context)
+    urdf_eduard_model_path = urdf_eduard_model_path_arg.perform(context)
 
     print("use robot name = ", robot_name)
     print("use wheel type = ", wheel_type)
@@ -35,9 +34,47 @@ def generate_launch_description():
         executable='robot_state_publisher',
         parameters=[
             {'robot_description': robot_description},
+        ],
+        namespace=robot_name
+    )
+
+    return [ robot_state_publisher_node ]
+
+def generate_launch_description():
+    # launch file arguments
+    edu_robot_namespace = LaunchConfiguration('edu_robot_namespace')
+    edu_robot_namespace_arg = DeclareLaunchArgument(
+        'edu_robot_namespace', default_value=os.getenv('EDU_ROBOT_NAMESPACE', default='eduard')
+    )
+
+    wheel_type = LaunchConfiguration('wheel_type')
+    wheel_type_arg = DeclareLaunchArgument(
+        'wheel_type', default_value=os.getenv('EDU_ROBOT_WHEEL_TYPE', default='mecanum')
+    )
+
+    # create robot model
+    package_path = FindPackageShare('edu_robot_control')
+    model_path = PathJoinSubstitution([
+        package_path,
+        'model/urdf'
+    ])
+    urdf_eduard_model_path = PathJoinSubstitution([
+        model_path,
+        'eduard.urdf'
+    ])
+
+    # publishing robot model via node
+    robot_description_publisher = OpaqueFunction(
+        function=generate_robot_model,
+        args=[
+            edu_robot_namespace,
+            wheel_type,
+            urdf_eduard_model_path
         ]
     )
 
     return LaunchDescription([
-        robot_state_publisher_node,
+        edu_robot_namespace_arg,
+        wheel_type_arg,
+        robot_description_publisher
     ])
