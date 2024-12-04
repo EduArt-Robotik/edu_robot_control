@@ -7,15 +7,15 @@ ENV ROS_DISTRO=jazzy
 USER root
 RUN apt-get update \
     && apt-get install -y \
-        ros-$ROS_DISTRO-rviz2 \
-        ros-$ROS_DISTRO-xacro
-
+      ros-$ROS_DISTRO-joy \
+      ros-$ROS_DISTRO-joy-linux
 
 # work with user user
 USER $USER
 
 # set up  workspace
 COPY ./edu_robot_control /home/$USER/ros/src/edu_robot_control
+COPY ./joystick_drivers home/$USER/ros/src/joystick_drivers
 
 # build EduArt packages nodes
 RUN source /opt/ros/$ROS_DISTRO/setup.bash \
