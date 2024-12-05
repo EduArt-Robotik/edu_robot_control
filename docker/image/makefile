@@ -1,7 +1,7 @@
-image_name = eduart-robot-control:0.4.0
+image_name = eduart-robot-control:0.5.0
 
 download-sources:
-	git clone --branch 0.4.0 https://github.com/EduArt-Robotik/edu_robot_control.git
+	git clone --branch 0.5.0 https://github.com/EduArt-Robotik/edu_robot_control.git
 	git clone --branch feature/reduce_complexity_for_stable_processing_dt https://github.com/EduArt-Robotik/joystick_drivers.git
 
 build-docker:
