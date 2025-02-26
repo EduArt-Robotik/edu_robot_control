@@ -122,7 +122,7 @@
     <axis xyz="0 0 1"/>    
   </joint>
 
-  <!-- GPIO-->
+  <!-- GPIO Iot2050-->
   <xacro:if value="${'iot2050' in '$(arg hardware)'}">
     <ros2_control name="eduard_iot2050_hardware" type='system'>
       <hardware>
