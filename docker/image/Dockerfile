@@ -1,13 +1,16 @@
 FROM eduartrobotik/eduart-robot:1.0.0
 
-ENV USER user
+ENV USER=user
 ENV DEBIAN_FRONTEND=noninteractive
 ENV ROS_DISTRO=jazzy
 
 USER root
 RUN apt-get update \
     && apt-get install -y \
-      ros-$ROS_DISTRO-joy-linux
+      ros-$ROS_DISTRO-joy-linux \
+      ros-$ROS_DISTRO-xacro \
+      ros-$ROS_DISTRO-controller-manager \
+      ros-$ROS_DISTRO-gpio-controllers
 
 # work with user user
 USER $USER
