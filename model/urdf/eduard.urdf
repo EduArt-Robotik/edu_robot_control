@@ -169,7 +169,7 @@
         </command_interface>
         <state_interface name="pwm_3"/>
       </gpio>
-      <gpio name="x12">
+      <!-- <gpio name="x12">
         <state_interface name="analog_0">
           <param name="pin">14</param>
         </state_interface>
@@ -188,7 +188,7 @@
         <state_interface name="analog_5">
           <param name="pin">19</param>
         </state_interface>                
-      </gpio>
+      </gpio> -->
     </ros2_control>
   </xacro:if>
 </robot>
