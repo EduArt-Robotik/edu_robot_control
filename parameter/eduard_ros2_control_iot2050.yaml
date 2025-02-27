@@ -4,7 +4,7 @@
     gpios:
       - x10
       - x11
-      - x12
+      # - x12
     command_interfaces:
       x10:
         - interfaces:
@@ -34,11 +34,11 @@
           - pwm_1
           - pwm_2
           - pwm_3
-      x12:
-        - interfaces:
-          - analog_0
-          - analog_1
-          - analog_2
-          - analog_3
-          - analog_4
-          - analog_5          
+      # x12:
+      #   - interfaces:
+      #     - analog_0
+      #     - analog_1
+      #     - analog_2
+      #     - analog_3
+      #     - analog_4
+      #     - analog_5          
