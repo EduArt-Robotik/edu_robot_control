@@ -129,45 +129,48 @@
         <plugin>eduart/robot/hardware/iot_shield/Ros2HardwareAdapter</plugin>     
       </hardware>
       <gpio name="x10">
-        <command_interface name="pwm_0">
+        <command_interface name="pwm_8">
           <param name="period_us">1000</param>
           <param name="pin">8</param>
         </command_interface>
-        <state_interface name="pwm_0"/>
-        <command_interface name="pwm_1">
+        <state_interface name="pwm_8"/>
+
+        <command_interface name="pwm_9">
           <param name="period_us">1000</param>
           <param name="pin">9</param>
         </command_interface>
-        <state_interface name="pwm_1"/>
+        <state_interface name="pwm_9"/>
       </gpio>
       <gpio name="x11">
-        <state_interface name="din_0">
+        <state_interface name="din_2">
           <param name="pin">2</param>
         </state_interface>
-        <command_interface name="dout_0">
+
+        <state_interface name="din_3">
           <param name="pin">3</param>
-        </command_interface>
-        <state_interface name="dout_0"/>
-        <command_interface name="pwm_0">
-          <param name="period_us">1000</param>
+        </state_interface>
+
+        <state_interface name="din_4">
           <param name="pin">4</param>
-        </command_interface>
-        <state_interface name="pwm_0"/>
-        <command_interface name="pwm_1">
+        </state_interface>
+
+        <command_interface name="pwm_5">
           <param name="period_us">1000</param>
           <param name="pin">5</param>
         </command_interface>
-        <state_interface name="pwm_1"/>
-        <command_interface name="pwm_2">
+        <state_interface name="pwm_5"/>
+
+        <command_interface name="pwm_6">
           <param name="period_us">1000</param>
           <param name="pin">6</param>
         </command_interface>
-        <state_interface name="pwm_2"/>
-        <command_interface name="pwm_3">
+        <state_interface name="pwm_6"/>
+
+        <command_interface name="pwm_7">
           <param name="period_us">1000</param>
           <param name="pin">7</param>
         </command_interface>
-        <state_interface name="pwm_3"/>
+        <state_interface name="pwm_7"/>
       </gpio>
       <!-- <gpio name="x12">
         <state_interface name="analog_0">
