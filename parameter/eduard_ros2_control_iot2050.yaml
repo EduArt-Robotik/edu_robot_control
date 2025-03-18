@@ -8,32 +8,30 @@
     command_interfaces:
       x10:
         - interfaces:
-          - pwm_0
-          - pwm_1
+          - pwm_8
+          - pwm_9
           # - spi
           # - i2c
       x11:
         - interfaces:
-          - dout_0
-          - pwm_0
-          - pwm_1
-          - pwm_2
-          - pwm_3
+          - pwm_5
+          - pwm_6
+          - pwm_7
 
 
     state_interfaces:
       x10:
         - interfaces:
-          - pwm_0
-          - pwm_1
+          - pwm_8
+          - pwm_9
       x11:
         - interfaces:
-          - din_0
-          - dout_0
-          - pwm_0
-          - pwm_1
-          - pwm_2
-          - pwm_3
+          - din_2
+          - din_3
+          - din_4
+          - pwm_5
+          - pwm_6
+          - pwm_7
       # x12:
       #   - interfaces:
       #     - analog_0
