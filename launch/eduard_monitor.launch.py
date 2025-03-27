@@ -10,10 +10,16 @@ from launch.substitutions import Command, LaunchConfiguration, EnvironmentVariab
 
 def generate_launch_description():
     # launch file arguments
+    # robot namespace
     edu_robot_namespace = LaunchConfiguration('edu_robot_namespace')
     edu_robot_namespace_arg = DeclareLaunchArgument(
         'edu_robot_namespace', default_value=os.getenv('EDU_ROBOT_NAMESPACE', default='eduard')
     )
+
+    # use sim time
+    use_sim_time = LaunchConfiguration('use_sim_time')
+    use_sim_time_arg = DeclareLaunchArgument('use_sim_time', default_value=os.getenv('USE_SIM_TIME', default=False))
+
     # RViz Config
     package_path = get_package_share_path('edu_robot_control')
     rviz_config = os.path.join(package_path, 'parameter', 'eduard.rviz')
@@ -23,7 +29,10 @@ def generate_launch_description():
       executable='rviz2',
       name='rviz2',
       namespace=edu_robot_namespace,
-      arguments=['-d', rviz_config]
+      arguments=['-d', rviz_config],
+      parameters=[
+        {'use_sim_time': use_sim_time}
+      ]
     )
 
     # Robot Description for Eduard
@@ -32,6 +41,7 @@ def generate_launch_description():
 
     return LaunchDescription([
       edu_robot_namespace_arg,
+      use_sim_time_arg,
       rviz_node,
       launch_file
     ])
