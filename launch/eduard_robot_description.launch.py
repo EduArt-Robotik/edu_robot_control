@@ -14,9 +14,10 @@ from launch_ros.substitutions import FindPackageShare
 import xacro
 
 def generate_robot_model(context: LaunchContext, robot_name_arg: LaunchConfiguration, wheel_type_arg: LaunchConfiguration,
-                         urdf_eduard_model_path_arg: PathJoinSubstitution) -> str:
+                         use_sim_time_arg: LaunchConfiguration, urdf_eduard_model_path_arg: PathJoinSubstitution) -> str:
     robot_name = robot_name_arg.perform(context)
     wheel_type = wheel_type_arg.perform(context)
+    use_sim_time = use_sim_time_arg.perform(context)
     urdf_eduard_model_path = urdf_eduard_model_path_arg.perform(context)
 
     print("use robot name = ", robot_name)
@@ -34,6 +35,7 @@ def generate_robot_model(context: LaunchContext, robot_name_arg: LaunchConfigura
         executable='robot_state_publisher',
         parameters=[
             {'robot_description': robot_description},
+            {'use_sim_time': use_sim_time_arg}
         ],
         namespace=robot_name
     )
@@ -52,6 +54,11 @@ def generate_launch_description():
         'wheel_type', default_value=os.getenv('EDU_ROBOT_WHEEL_TYPE', default='mecanum')
     )
 
+    use_sim_time = LaunchConfiguration('use_sim_time')
+    use_sim_time_arg = DeclareLaunchArgument(
+        'use_sim_time', default_value='False' if os.environ.get('USE_SIM_TIME') != '1' else 'True'
+    )  
+
     # create robot model
     package_path = FindPackageShare('edu_robot_control')
     model_path = PathJoinSubstitution([
@@ -69,6 +76,7 @@ def generate_launch_description():
         args=[
             edu_robot_namespace,
             wheel_type,
+            use_sim_time,
             urdf_eduard_model_path
         ]
     )
@@ -76,5 +84,6 @@ def generate_launch_description():
     return LaunchDescription([
         edu_robot_namespace_arg,
         wheel_type_arg,
+        use_sim_time_arg,
         robot_description_publisher
     ])
