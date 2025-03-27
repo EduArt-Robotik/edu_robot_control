@@ -14,9 +14,10 @@ from launch_ros.substitutions import FindPackageShare
 import xacro
 
 def generate_robot_model(context: LaunchContext, robot_name_arg: LaunchConfiguration, wheel_type_arg: LaunchConfiguration,
-                         hardware_type_arg: LaunchConfiguration, urdf_eduard_model_path_arg: PathJoinSubstitution) -> str:
+                         hardware_type: LaunchConfiguration, use_sim_time_arg: LaunchConfiguration, urdf_eduard_model_path_arg: PathJoinSubstitution) -> str:
     robot_name = robot_name_arg.perform(context)
     wheel_type = wheel_type_arg.perform(context)
+    use_sim_time = use_sim_time_arg.perform(context)
     hardware_type = hardware_type_arg.perform(context)
     urdf_eduard_model_path = urdf_eduard_model_path_arg.perform(context)
 
@@ -36,6 +37,7 @@ def generate_robot_model(context: LaunchContext, robot_name_arg: LaunchConfigura
         executable='robot_state_publisher',
         parameters=[
             {'robot_description': robot_description},
+            {'use_sim_time': use_sim_time_arg}
         ],
         namespace=robot_name
     )
@@ -53,6 +55,11 @@ def generate_launch_description():
     wheel_type_arg = DeclareLaunchArgument(
         'wheel_type', default_value=os.getenv('EDU_ROBOT_WHEEL_TYPE', default='mecanum')
     )
+
+    use_sim_time = LaunchConfiguration('use_sim_time')
+    use_sim_time_arg = DeclareLaunchArgument(
+        'use_sim_time', default_value='False' if os.environ.get('USE_SIM_TIME') != '1' else 'True'
+    )  
 
     hardware_type = LaunchConfiguration('hardware_type')
     hardware_type_arg = DeclareLaunchArgument('hardware_type', default_value='unknown')
@@ -75,6 +82,7 @@ def generate_launch_description():
             edu_robot_namespace,
             wheel_type,
             hardware_type,
+            use_sim_time,
             urdf_eduard_model_path
         ]
     )
@@ -104,8 +112,9 @@ def generate_launch_description():
     return LaunchDescription([
         edu_robot_namespace_arg,
         wheel_type_arg,
+        use_sim_time_arg,
+        robot_description_publisher
         hardware_type_arg,
-        robot_description_publisher,
         control_node,
         gpio_controller
     ])
