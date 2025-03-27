@@ -4,7 +4,7 @@ from ament_index_python.packages import get_package_share_path
 
 from launch import LaunchDescription, LaunchContext
 from launch.actions import DeclareLaunchArgument, OpaqueFunction
-from launch.conditions import IfCondition, UnlessCondition
+from launch.conditions import IfCondition, UnlessCondition, LaunchConfigurationEquals
 from launch.substitutions import Command, LaunchConfiguration, EnvironmentVariable, TextSubstitution, PathJoinSubstitution
 
 from launch_ros.actions import Node
@@ -14,10 +14,11 @@ from launch_ros.substitutions import FindPackageShare
 import xacro
 
 def generate_robot_model(context: LaunchContext, robot_name_arg: LaunchConfiguration, wheel_type_arg: LaunchConfiguration,
-                         use_sim_time_arg: LaunchConfiguration, urdf_eduard_model_path_arg: PathJoinSubstitution) -> str:
+                         hardware_type: LaunchConfiguration, use_sim_time_arg: LaunchConfiguration, urdf_eduard_model_path_arg: PathJoinSubstitution) -> str:
     robot_name = robot_name_arg.perform(context)
     wheel_type = wheel_type_arg.perform(context)
     use_sim_time = use_sim_time_arg.perform(context)
+    hardware_type = hardware_type_arg.perform(context)
     urdf_eduard_model_path = urdf_eduard_model_path_arg.perform(context)
 
     print("use robot name = ", robot_name)
@@ -26,7 +27,8 @@ def generate_robot_model(context: LaunchContext, robot_name_arg: LaunchConfigura
         urdf_eduard_model_path,
         mappings={
             'robot_name': robot_name,
-            'wheel_type': wheel_type
+            'wheel_type': wheel_type,
+            'hardware'  : hardware_type
         }
     ).toprettyxml()
 
@@ -59,6 +61,9 @@ def generate_launch_description():
         'use_sim_time', default_value='False' if os.environ.get('USE_SIM_TIME') != '1' else 'True'
     )  
 
+    hardware_type = LaunchConfiguration('hardware_type')
+    hardware_type_arg = DeclareLaunchArgument('hardware_type', default_value='unknown')
+
     # create robot model
     package_path = FindPackageShare('edu_robot_control')
     model_path = PathJoinSubstitution([
@@ -76,9 +81,32 @@ def generate_launch_description():
         args=[
             edu_robot_namespace,
             wheel_type,
+            hardware_type,
             use_sim_time,
             urdf_eduard_model_path
         ]
+    )
+
+    # Optional GPIO Hardware
+    robot_controller = PathJoinSubstitution([
+      FindPackageShare('edu_robot_control'),
+      'parameter',
+      'eduard_ros2_control_iot2050.yaml'
+    ])
+    control_node = Node(
+        package="controller_manager",
+        executable="ros2_control_node",
+        parameters=[robot_controller],
+        namespace=edu_robot_namespace,
+        output="both",
+        condition=LaunchConfigurationEquals('hardware_type', 'iot2050')
+    )
+    gpio_controller = Node(
+      package="controller_manager",
+      executable="spawner",
+      arguments=["gpio_controller", "--param-file", robot_controller],
+      namespace=edu_robot_namespace,
+      condition=LaunchConfigurationEquals('hardware_type', 'iot2050')
     )
 
     return LaunchDescription([
@@ -86,4 +114,7 @@ def generate_launch_description():
         wheel_type_arg,
         use_sim_time_arg,
         robot_description_publisher
+        hardware_type_arg,
+        control_node,
+        gpio_controller
     ])

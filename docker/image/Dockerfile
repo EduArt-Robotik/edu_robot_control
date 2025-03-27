@@ -1,14 +1,16 @@
-FROM eduartrobotik/eduart-robot:0.5.0
+FROM eduartrobotik/eduart-robot:1.0.0
 
-ENV USER user
+ENV USER=user
 ENV DEBIAN_FRONTEND=noninteractive
 ENV ROS_DISTRO=jazzy
 
 USER root
 RUN apt-get update \
     && apt-get install -y \
-      ros-$ROS_DISTRO-joy \
-      ros-$ROS_DISTRO-joy-linux
+      ros-$ROS_DISTRO-joy-linux \
+      ros-$ROS_DISTRO-xacro \
+      ros-$ROS_DISTRO-controller-manager \
+      ros-$ROS_DISTRO-gpio-controllers
 
 # work with user user
 USER $USER
@@ -20,7 +22,7 @@ COPY ./joystick_drivers home/$USER/ros/src/joystick_drivers
 # build EduArt packages nodes
 RUN source /opt/ros/$ROS_DISTRO/setup.bash \
     && source /home/$USER/.bashrc \
-    && colcon build --symlink-install --executor sequential --event-handlers console_direct+ --cmake-args -DCMAKE_BUILD_TYPE=Release
+    && colcon build --packages-select joy edu_robot_control --symlink-install --event-handlers console_direct+ --cmake-args -DCMAKE_BUILD_TYPE=Release
 
 # add entry point
 COPY --chown=$USER ./entrypoint /home/$USER/

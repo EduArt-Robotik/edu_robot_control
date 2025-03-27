@@ -36,12 +36,12 @@ def generate_launch_description():
     )
 
     # Robot Description for Eduard
-    launch_file_path = os.path.join(package_path, 'launch', 'eduard_robot_description.launch.py')
-    launch_file = IncludeLaunchDescription(PythonLaunchDescriptionSource(launch_file_path))
+    # launch_file_path = os.path.join(package_path, 'launch', 'eduard_robot_description.launch.py')
+    # launch_file = IncludeLaunchDescription(PythonLaunchDescriptionSource(launch_file_path))
 
     return LaunchDescription([
       edu_robot_namespace_arg,
       use_sim_time_arg,
       rviz_node,
-      launch_file
+      # launch_file
     ])
