@@ -14,7 +14,7 @@ from launch_ros.substitutions import FindPackageShare
 import xacro
 
 def generate_robot_model(context: LaunchContext, robot_name_arg: LaunchConfiguration, wheel_type_arg: LaunchConfiguration,
-                         hardware_type: LaunchConfiguration, use_sim_time_arg: LaunchConfiguration, urdf_eduard_model_path_arg: PathJoinSubstitution) -> str:
+                         hardware_type_arg: LaunchConfiguration, use_sim_time_arg: LaunchConfiguration, urdf_eduard_model_path_arg: PathJoinSubstitution) -> str:
     robot_name = robot_name_arg.perform(context)
     wheel_type = wheel_type_arg.perform(context)
     use_sim_time = use_sim_time_arg.perform(context)
@@ -113,8 +113,8 @@ def generate_launch_description():
         edu_robot_namespace_arg,
         wheel_type_arg,
         use_sim_time_arg,
-        robot_description_publisher
         hardware_type_arg,
+        robot_description_publisher,
         control_node,
         gpio_controller
     ])
