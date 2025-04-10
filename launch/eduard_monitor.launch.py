@@ -18,7 +18,7 @@ def generate_launch_description():
 
     # use sim time
     use_sim_time = LaunchConfiguration('use_sim_time')
-    use_sim_time_arg = DeclareLaunchArgument('use_sim_time', default_value=os.getenv('USE_SIM_TIME', default=False))
+    use_sim_time_arg = DeclareLaunchArgument('use_sim_time', default_value=os.getenv('USE_SIM_TIME', default='False'))
 
     # RViz Config
     package_path = get_package_share_path('edu_robot_control')
