@@ -38,84 +38,7 @@ and is defined in the parameter file "remote_control.yaml" located in the folder
 
 ## Deploying
 
-A Docker container is used to run this software on our robots. Normally, all our robots are shipped with a Docker container registered to start after a reboot. If you want to deploy a newer version, or whatever the reason, make sure to remove the previously deployed container. To check which containers are running, use the following command:
-
-```bash
-docker container ls 
-```
-A typically print out looks like:
-
-```bash
-CONTAINER ID   IMAGE                      COMMAND                  CREATED      STATUS          PORTS     NAMES
-46c8590424c0   eduard-iotbot:0.2.1-beta   "/ros_entrypoint.sh …"   6 days ago   Up 21 minutes             eduard-iotbot-0.2.1-beta
-```
-
-To stop and remove the container, use the following command with the container ID displayed by the above command:
-
-```bash
-docker stop <container id>
-docker rm <container id>
-```
-
-## Deploying on IoT2050
-
->Note: If you are using [edu_robot](https://github.com/EduArt-Robotik/edu_robot), it is not necessary to install **edu_robot_control**. It is already supplied with **edu_robot**.
-
-### Use Prebuilt Docker Images
-
-The easiest way, and one that is usually quite sufficient, is to use a prebuilt Docker image. All released versions of edu_robot software are usually available. 
-
-The following command deploys and starts the image. Note: please make sure that the robot has internet connection. It is considered that the official ["Example Image V1.3.1"](https://support.industry.siemens.com/cs/document/109741799/downloads-f%C3%BCr-simatic-iot20x0?dti=0&lc=de-DE) provided by Siemens will be used for the IoT2050. If this is not the case it cloud lead in a misinterpretation of the game pad.
-
-We provide a docker compose file for the IoT2050. Either [download the file](docker/iot2050/docker-compose.yaml) on IoT2050 or clone the repository and navigate to the file:
-
-```bash
-git clone https://github.com/EduArt-Robotik/edu_robot.git
-cd edu_robot_control/docker/iot2050
-```
-
-Then execute following command inside the folder where the ["docker-compose.yaml"](docker/iot2050/docker-compose.yaml) is located:
-
-```bash
-docker compose up
-```
-
-Inside the docker compose file a namespace is defined. This namespace can freely be modified. We recommend to reflect the robot color with this namespace. But in general do it like you want.
-
-The docker container can be removed by the command:
-
-```bash
-docker compose down
-```
-
-executed at the location of the docker compose file. This has to be done if a newer version should be deployed.
-
-## Deploying on IPC127e
-
->Note: If you are using [edu_robot](https://github.com/EduArt-Robotik/edu_robot), it is not necessary to install **edu_robot_control**. It is already supplied with **edu_robot**.
-
-The easiest way, and one that is usually quite sufficient, is to use a prebuilt Docker image. All released versions of edu_robot software are usually available. 
-
-```bash
-git clone https://github.com/EduArt-Robotik/edu_robot.git
-cd edu_robot_control/docker/ipc127e
-```
-
-Then execute following command inside the folder where the ["docker-compose.yaml"](docker/ipc127e/docker-compose.yaml) is located:
-
-```bash
-docker compose up
-```
-
-Inside the docker compose file a namespace is defined. This namespace can freely be modified. We recommend to reflect the robot color with this namespace. But in general do it like you want.
-
-The docker container can be removed by the command:
-
-```bash
-docker compose down
-```
-
-executed at the location of the docker compose file. This has to be done if a newer version should be deployed.
+This software packages is usually deployed together with [edu_robot](https://github.com/EduArt-Robotik/edu_robot).
 
 ## Setting up your Joystick
 
@@ -192,25 +115,8 @@ ros2 launch edu_robot_control eduard_monitor.launch.py
 
 EDU_ROBOT_NAMESPACE and EDU_ROBOT_WHEEL_TYPE environment variable is read by this launch file. The namespace must fit to the used one of the robot. The wheel type can be "mecanum" or "skid". RViz will load the corresponding meshes. If RViz comes up properly it will be shown following:
 
-![Eduard visualized using RViz](documentation/image/eduard-monitoring-using-rviz.png)
-
-## Installed into a Docker Container
-
-Another way is to build a Docker image using the provided docker file. First navigate into the correct folder:
+Alternative the robot namespace can be set using the launch file argument **edu_robot_namespace**. For example:
 
 ```bash
-cd edu_robot/docker/host
-```
-
-Next step is to build the Docker image by executing following command:
-
-```bash
-make all
-make clean
-```
-
-After the Docker image was built it can be started using following command:
-
-```bash
-docker run --rm --user=user --net=host --pid=host --ipc=host --env=DISPLAY --volume=/tmp/.X11-unix:/tmp/.X11-unix:rw --env EDU_ROBOT_NAMESPACE=eduard/red --env EDU_ROBOT_WHEEL_TYPE=mecanum eduard-robot-monitoring:0.2.0
+ros2 launch edu_robot_control eduard_monitor.launch.py edu_robot_namespace:=eduard/blue
 ```
