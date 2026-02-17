@@ -19,23 +19,30 @@ def generate_launch_description():
       'remote_control_steam_deck.yaml'
     ])
 
+    # robot namespace
+    edu_robot_namespace = LaunchConfiguration('edu_robot_namespace')
+    edu_robot_namespace_arg = DeclareLaunchArgument(
+        'edu_robot_namespace', default_value=os.getenv('EDU_ROBOT_NAMESPACE', default='eduard')
+    )  
+
     joy_node = Node(
       package='joy',
       executable='joy_node',
       parameters=[
         {'rate': 20.0}
       ],
-      namespace=EnvironmentVariable('EDU_ROBOT_NAMESPACE', default_value="eduard")
+      namespace=edu_robot_namespace
     )
 
     remote_control_node = Node(
       package='edu_robot_control',
       executable='remote_control',
       parameters=[parameter_file],
-      namespace=EnvironmentVariable('EDU_ROBOT_NAMESPACE', default_value="eduard")
+      namespace=edu_robot_namespace
     )
 
     return LaunchDescription([
+      edu_robot_namespace_arg,
       joy_node,
       remote_control_node
     ])

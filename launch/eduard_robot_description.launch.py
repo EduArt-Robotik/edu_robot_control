@@ -37,7 +37,7 @@ def generate_robot_model(context: LaunchContext, robot_name_arg: LaunchConfigura
         executable='robot_state_publisher',
         parameters=[
             {'robot_description': robot_description},
-            {'use_sim_time': use_sim_time_arg}
+            {'use_sim_time': use_sim_time}
         ],
         namespace=robot_name
     )
