@@ -1,5 +1,9 @@
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.10)
 project(edu_robot_control)
+
+if (POLICY CMP0167)
+    cmake_policy(SET CMP0167 OLD)
+endif ()
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic -std=c++1z)
@@ -28,12 +32,11 @@ target_include_directories(remote_control PUBLIC
   $<INSTALL_INTERFACE:include>
 )
 target_compile_features(remote_control PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
-ament_target_dependencies(
-  remote_control
-  "rclcpp"
-  "sensor_msgs"
-  "geometry_msgs"
-  "edu_robot"
+target_link_libraries(remote_control
+  rclcpp::rclcpp
+  "${sensor_msgs_TARGETS}"
+  "${geometry_msgs_TARGETS}"
+  edu_robot::edu_robot
 )
 
 install(
